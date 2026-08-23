@@ -1,7 +1,7 @@
 {
   "GENERAL": {
     "IVPROG": "Accessible iVProg",
-    "TITLE": "Start function",
+    "TITLE": "Commands Area",
     "RECEIVE": "receive",
     "READ_CODE": "Read code",
     "READ_EDIT": "Edit code",
@@ -9,22 +9,22 @@
     "TRUE": "true",
     "FALSE": "false",
     "LANGUAGES": {
-      "PORTUGUESE": "Portuguese",
+      "PORTUGUESE": "Português",
       "ENGLISH": "English"
     },
     "MENU": {
-      "START": "Go start function",
-      "ALT_I": "ALT + I Go to start function",
-      "TERMINAL": "Go to terminal",
-      "ALT_T": "ALT + T Go to terminal",
+      "START": "Go to Commands Area",
+      "ALT_I": "ALT + I Go to Commands Area",
+      "MONITORING": "Go to monitoring",
+      "ALT_G": "ALT + G Go to monitoring",
       "COMANDS": "Go to command list",
       "ALT_C": "ALT + C Go to command list",
       "PROGRAM": "Run program",
       "ALT_E": "ALT+E Run program",
-      "MONITOR": "Monitor Performance",
-      "MONITOR_OFF": "Stop Monitoring and Download Log",
-      "ALT_M": "ALT + M Monitor Performance",
-      "ALT_M_OFF": "ALT + M Stop Monitoring and Download Log"
+      "MONITOR": "Record Activity",
+      "MONITOR_OFF": "Stop Recording",
+      "ALT_M": "ALT + M Record Activity",
+      "ALT_M_OFF": "ALT + M Stop Recording"
     },
     "BUTTON": {
       "RUN": "Execute",
@@ -43,7 +43,12 @@
     "CLOSE_PARENTHESES": "close parentheses",
     "VALUE": "Value",
     "SELECT_VALUE": "Select value",
-    "DIGIT_VALUE": "Value",
+    "DIGIT_VALUE": "Type the value",
+    "SELECT_DATA_TYPE": "Select the data type",
+    "VALUE_OF": "Value of",
+    "INCREMENT": "Increment",
+    "DECREMENT": "Decrement",
+    "STEP_VALUE": "Step numeric value",
     "SELECT_OPERATOR": "Select the operation",
     "ADD": "To add",
     "OPERATOR_MATH": "Mathematical Operators",
@@ -63,7 +68,26 @@
     "REPEAT": "repeat_to",
     "REPEAT_FROM": "from",
     "REPEAT_TO": "to",
-    "REPEAT_THEN": "then"
+    "REPEAT_THEN": "then",
+    "FOOTER": {
+      "COPYRIGHT": "LUMIA - Laboratory of Usability, Media and Artificial Intelligence.",
+      "ALL_RIGHTS": "All rights reserved.",
+      "VERSION": "Version"
+    }
+  },
+  "ACCESSIBLE_MATH": {
+    "MULTIPLY": "times",
+    "DIVIDE": "divided by",
+    "ADD": "plus",
+    "SUBTRACT": "minus",
+    "GREATER": "greater than",
+    "LESS": "less than",
+    "GREATER_EQUAL": "greater than or equal to",
+    "LESS_EQUAL": "less than or equal to",
+    "EQUAL": "is equal to",
+    "NOT_EQUAL": "is not equal to",
+    "RECEIVE": "receives",
+    "SEMICOLON": "semicolon"
   },
   "COMANDS": {
     "TITLE": "Commands",
@@ -81,7 +105,8 @@
     "REAL": "real",
     "TEXT": "text",
     "LOGIC": "logical",
-    "TYPE": "Variable Type"
+    "TYPE": "Variable Type",
+    "NAME": "variable name"
   },
   "WRITE": {
     "SELECT_OPERATION": "Select the variable to assign the operation"
@@ -107,5 +132,13 @@
     "CHECKBOX": "I understand the information above and consent to the monitoring of my activity.",
     "CANCEL": "Cancel",
     "CONSENT": "Consent"
+  },
+  "ACCESSIBILITY": {
+    "SKIP_LINKS": "Skip Links",
+    "MAIN_MENU": "Main Menu",
+    "TOGGLE_NAVIGATION": "Toggle navigation",
+    "LOGO_IVPROG": "iVProg Forms Logo",
+    "LOGO_LUMIA": "Lumia Logo",
+    "SELECT_LANGUAGE": "Select language"
   }
 }
