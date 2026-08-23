@@ -8,16 +8,19 @@
 
         <div *ngIf="isHidden" class="d-flex flex-column col-8 col-lg-9 conditional">
             <div class="d-flex flex-wrap">
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center position-relative">
                     <span class="rigth" tabindex="0">{{'GENERAL.IF' | translate }}</span>
                     <span aria-hidden="true">&#40; </span>
-                    <span tabindex="0" aria-hidden="false" class="sr-only">{{'GENERAL.OPEN_PARENTHESES' | translate }}</span>
+                    <span tabindex="0" aria-hidden="false" class="sr-only">{{'GENERAL.OPEN_PARENTHESES' | translate
+                        }}</span>
                 </div>
 
                 <div class="d-flex align-items-center" *ngFor="let op of conditional.conditionals">
                     <div class="col">
-                        <select class="form-select" id="conditional-op-{{index}}-{{op.index}}" *ngIf="op.type != 'CONDITIONAL'"
-                            [(ngModel)]="op.type" (change)="clearValue(op)" [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
+                        <select class="form-select" id="conditional-op-{{index}}-{{op.index}}"
+                            *ngIf="op.type != 'CONDITIONAL'" [(ngModel)]="op.type" (change)="clearValue(op)"
+                            [title]="'GENERAL.SELECT_DATA_TYPE' | translate"
+                            [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
                             <option [ngValue]="''" selected>{{ "GENERAL.SELECT" | translate }}</option>
                             <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
                             <option [ngValue]="'VALUE'">{{ "GENERAL.VALUE" | translate }}</option>
@@ -25,22 +28,34 @@
                     </div>
 
                     <div class="col">
-                        <select id="conditional-op-{{index}}-{{op.index}}" class="ml-2 form-select" *ngIf="op.type == 'VARIABLE'" 
-                            [(ngModel)]="op.value" (change)="changeValue()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
-                            <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
-                            <option *ngIf="variables.length && op.value ==''" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
+                        <select id="conditional-op-{{index}}-{{op.index}}" class="ml-2 form-select"
+                            *ngIf="op.type == 'VARIABLE'" [(ngModel)]="op.value" (change)="changeValue()"
+                            [title]="'GENERAL.SELECT_VARIABLE' | translate"
+                            [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
+                            <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" |
+                                translate }}</option>
+                            <option *ngIf="variables.length && op.value ==''" disabled [ngValue]="''">{{
+                                "GENERAL.SELECT_VARIABLE" | translate }}</option>
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
                         </select>
                     </div>
 
                     <div class="col">
-                        <input id="conditional-op-{{index}}-{{op.index}}" class="form-control" *ngIf="op.type == 'VALUE'" 
-                            [(ngModel)]="op.valueString" (keyup)="changeInputValue(op)" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
+                        <input id="conditional-op-{{index}}-{{op.index}}" class="form-control"
+                            *ngIf="op.type == 'VALUE'" [(ngModel)]="op.valueString" (keyup)="changeInputValue(op)"
+                            type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate"
+                            [title]="'GENERAL.DIGIT_VALUE' | translate"
+                            [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
 
                     <div class="col">
-                        <select class="form-select conditional-dropdown" *ngIf="op.type == 'CONDITIONAL'" id="conditional-op-{{index}}-{{op.index}}" tabindex="0" [(ngModel)]="op.value" (change)="changeConditional(op, op.value, op.index)" [title]="'GENERAL.SELECT_OPERATOR' | translate" [attr.aria-label]="'GENERAL.SELECT_OPERATOR' | translate">
-                            <option [ngValue]="''" disabled *ngIf="op.value == ''">{{ "GENERAL.CONDITIONAL" | translate }}</option>
+                        <select class="form-select conditional-dropdown" *ngIf="op.type == 'CONDITIONAL'"
+                            id="conditional-op-{{index}}-{{op.index}}" tabindex="0" [(ngModel)]="op.value"
+                            (change)="changeConditional(op, op.value, op.index)"
+                            [title]="'GENERAL.SELECT_OPERATOR' | translate"
+                            [attr.aria-label]="'GENERAL.SELECT_OPERATOR' | translate">
+                            <option [ngValue]="''" disabled *ngIf="op.value == ''">{{ "GENERAL.CONDITIONAL" | translate
+                                }}</option>
                             <optgroup [label]="'GENERAL.MATH' | translate">
                                 <option [ngValue]="'+'">+</option>
                                 <option [ngValue]="'-'">-</option>
@@ -65,101 +80,73 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center">
-                    <button class="btn btn-primary more mr-2" *ngIf="conditional.conditionals.length" type="button" (click)="addConditional()">
+                <div class="d-flex justify-content-center align-items-center position-relative">
+                    <button class="btn btn-primary more mr-2" *ngIf="conditional.conditionals.length" type="button"
+                        (click)="addConditional()">
                         <strong aria-hidden="true">+</strong>
                         <strong aria-hidden="false" class="sr-only">{{'GENERAL.CONDITIONAL' | translate }}</strong>
                     </button>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center position-relative">
                     <span aria-hidden="true">)</span>
-                    <span tabindex="0" aria-hidden="false" class="sr-only">{{'GENERAL.CLOSE_PARENTHESES' | translate }}</span>
+                    <span tabindex="0" aria-hidden="false" class="sr-only">
+                        {{'GENERAL.CLOSE_PARENTHESES' | translate}}
+                    </span>
                 </div>
 
                 <div>
                     <span tabindex="0">{{'GENERAL.ELSE' | translate }}</span>
-                    <app-command-button 
-                        [mode]="'inline'" 
-                        [title]="'Adicionar comandos na condição'" 
-                        [hasVariables]="false"
-                        [components]="conditional.condition.components"
-                        [variables]="variables"
-                        [text]="false" 
-                        [iconComands]="false"    
-                        (change)="setStorage()"
-                    ></app-command-button>
+                    <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
+                        [hasVariables]="false" [components]="conditional.condition.components" [variables]="variables"
+                        [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center">
-                    <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clear()"><i class="bi bi-trash"></i></button>
+                    <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clear()"><i
+                            class="bi bi-trash"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="col-4 col-lg-3">
-            <app-command-button *ngIf="hasToggle"
-                [mode]="'inline'" 
-                [text]="false" 
-                [title]="'Comandos'" 
-                [components]="components"
-                [variables]="variables"
-                (change)="setStorage()"
-            ></app-command-button>
+            <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'"
+                [components]="components" [variables]="variables" (change)="setStorage()"></app-command-button>
             <button class="btn btn-transparent" (click)="toggleHidden()"
-                    [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
-                    [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
+                [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
+                [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
                 <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
                 <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
             </button>
 
-            <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()" [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+            <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()"
+                [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
         </div>
 
         <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-12 conditional">
             <div class="row d-flex flex-wrap zindex">
-                <div class="row" *ngFor="let component of conditional.condition.components; let i = index;">  
-                    <app-write *ngIf="isWriter(component)" 
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [writer]="component.value"
-                      [components]="conditional.condition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.condition.components, $event)"
-                      (change)="setStorage()">
+                <div class="row" *ngFor="let component of conditional.condition.components; let i = index;">
+                    <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [writer]="component.value" [components]="conditional.condition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (change)="setStorage()">
                     </app-write>
-  
-                    <app-operator *ngIf="isOperator(component)" 
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [operator]="component.value"
-                      [components]="conditional.condition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.condition.components, $event)"
-                      (change)="setStorage()">
+
+                    <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [operator]="component.value" [components]="conditional.condition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (change)="setStorage()">
                     </app-operator>
-  
-                    <app-conditional *ngIf="isConditional(component)"
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [conditional]="component.value"
-                      [components]="conditional.condition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.condition.components, $event)"
-                      (change)="setStorage()">
+
+                    <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [conditional]="component.value" [components]="conditional.condition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (change)="setStorage()">
                     </app-conditional>
 
-                    <app-for *ngIf="isFor(component)"
-                      [back]="true"
-                      [index]="i"
-                      [for]="component.value"
-                      [components]="conditional.condition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.condition.components, $event)"
-                      (change)="setStorage()">
+                    <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
+                        [components]="conditional.condition.components" [variables]="variables"
+                        (remove)="removeComponent(conditional.condition.components, $event)" (change)="setStorage()">
                     </app-for>
                 </div>
             </div>
@@ -167,68 +154,41 @@
             <div class="d-flex flex-wrap">
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="rigth" tabindex="0">{{'GENERAL.ELSE_IF' | translate }}</span>
-                    
-                    <app-command-button 
-                        [mode]="'inline'" 
-                        [title]="'Adicionar comandos na condição'" 
-                        [hasVariables]="false"
-                        [components]="conditional.nocondition.components"
-                        [variables]="variables"
-                        [text]="false" 
-                        [iconComands]="false"   
-                        (change)="setStorage()" 
-                    ></app-command-button>
+
+                    <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
+                        [hasVariables]="false" [components]="conditional.nocondition.components" [variables]="variables"
+                        [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
                 </div>
             </div>
 
             <div class="row d-flex flex-wrap zindex">
                 <div class="row" *ngFor="let component of conditional.nocondition.components; let i = index;">
-                    <app-write *ngIf="isWriter(component)" 
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [writer]="component.value"
-                      [components]="conditional.nocondition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.nocondition.components, $event)"
-                      (change)="setStorage()">
+                    <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [writer]="component.value" [components]="conditional.nocondition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (change)="setStorage()">
                     </app-write>
-  
-                    <app-operator *ngIf="isOperator(component)" 
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [operator]="component.value"
-                      [components]="conditional.nocondition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.nocondition.components, $event)"
-                      (change)="setStorage()">
+
+                    <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [operator]="component.value" [components]="conditional.nocondition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (change)="setStorage()">
                     </app-operator>
-  
-                    <app-conditional *ngIf="isConditional(component)"
-                      [back]="true"
-                      [index]="i" 
-                      [hasToggle]="false"
-                      [conditional]="component.value"
-                      [components]="conditional.nocondition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.nocondition.components, $event)"
-                      (change)="setStorage()">
+
+                    <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
+                        [conditional]="component.value" [components]="conditional.nocondition.components"
+                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (change)="setStorage()">
                     </app-conditional>
 
-                    <app-for *ngIf="isFor(component)"
-                      [back]="true"
-                      [index]="i"
-                      [for]="component.value"
-                      [components]="conditional.nocondition.components"
-                      [variables]="variables"
-                      (remove)="removeComponent(conditional.nocondition.components, $event)"
-                      (change)="setStorage()">
+                    <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
+                        [components]="conditional.nocondition.components" [variables]="variables"
+                        (remove)="removeComponent(conditional.nocondition.components, $event)" (change)="setStorage()">
                     </app-for>
                 </div>
             </div>
         </div>
 
-        
+
     </div>
 </div>

@@ -77,7 +77,7 @@
 
               <div class="row">
                 <div class="col-12 pt-1 pb-4 px-4" style="text-align: right;">
-                  <div class="px-4 py-1">
+                  <div class="area-terminal-comandos-comandos px-4 py-1">
                     <div *ngFor="let component of components; let i = index;">
                       <app-variable *ngIf="isVariable(component)" [index]="i" [variable]="component.value"
                         [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
