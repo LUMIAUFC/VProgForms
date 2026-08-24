@@ -1,26 +1,30 @@
 {
   "GENERAL": {
     "IVPROG": "iVProg Acessível",
-    "TITLE": "Função início",
+    "TITLE": "Área de Comandos",
     "RECEIVE": "recebe",
     "READ_CODE": "Ler código",
     "READ_EDIT": "Editar código",
-    "READ_DELETE":"Excluir Variável",
+    "READ_DELETE": "Excluir Variável",
     "TRUE": "verdadeiro",
     "FALSE": "falso",
     "LANGUAGES": {
       "PORTUGUESE": "Português",
-      "ENGLISH": "Inglês"
+      "ENGLISH": "English"
     },
     "MENU": {
-      "START": "Ir função inicio",
-      "ALT_I": "ALT + I Ir para função inicio",
-      "TERMINAL": "Ir para o terminal",
-      "ALT_T": "ALT + T Ir para o terminal",
+      "START": "Ir para Área de Comandos",
+      "ALT_I": "ALT + I Ir para Área de Comandos",
+      "MONITORING": "Ir para monitoramento",
+      "ALT_G": "ALT + G Ir para monitoramento",
       "COMANDS": "Ir para a lista de comandos",
       "ALT_C": "ALT + C Ir para a lista de comandos",
       "PROGRAM": "Executar programa",
-      "ALT_E": "ALT + E Executar programa"
+      "ALT_E": "ALT + E Executar programa",
+      "MONITOR": "Gravar Atividade",
+      "MONITOR_OFF": "Encerrar Gravação",
+      "ALT_M": "ALT + M Gravar Atividade",
+      "ALT_M_OFF": "ALT + M Encerrar Gravação"
     },
     "BUTTON": {
       "RUN": "Executar",
@@ -33,37 +37,61 @@
     "NOT_VARIABLE": "Ainda não existem variáveis criadas!",
     "DIGIT": "Digite o texto a ser imprimido",
     "REMOVE_COMANDS": "Remover comandos",
-    "SELECT_VARIABLE":"Selecione a variável",
+    "SELECT_VARIABLE": "Selecione a variável",
     "SELECT_PAR": "Selecione o parêntese",
-    "OPEN_PARENTHESES":"abre parênteses",
-    "CLOSE_PARENTHESES":"fecha parênteses",
-    "VALUE":"Valor",
-    "SELECT_VALUE":"Selecione o valor",
-    "DIGIT_VALUE":"Digite o valor",
-    "SELECT_OPERATOR":"Selecione a operação",
-    "ADD":"Adicionar",
-    "OPERATOR_MATH":"Operadores Matemáticos",
+    "OPEN_PARENTHESES": "abre parênteses",
+    "CLOSE_PARENTHESES": "fecha parênteses",
+    "VALUE": "Valor",
+    "SELECT_VALUE": "Selecione o valor",
+    "DIGIT_VALUE": "Digite o valor",
+    "SELECT_DATA_TYPE": "Selecione o tipo de dado",
+    "VALUE_OF": "Valor de",
+    "INCREMENT": "Incrementar",
+    "DECREMENT": "Decrementar",
+    "STEP_VALUE": "Valor numérico do passo",
+    "SELECT_OPERATOR": "Selecione a operação",
+    "ADD": "Adicionar",
+    "OPERATOR_MATH": "Operadores Matemáticos",
     "CLEAN": "Limpar",
-    "IF":"se",
-    "MATH":"Aritméticos",
-    "LOGIC":"Lógicos",
-    "MULTPLICATION":"multiplicação",
-    "AND":"e",
+    "IF": "se",
+    "MATH": "Aritméticos",
+    "LOGIC": "Lógicos",
+    "MULTPLICATION": "multiplicação",
+    "AND": "e",
     "OR": "ou",
-    "NO":"nao",
-    "RELATIONAL":"Relacionais",
-    "EXCLAMATION":"Exclamação, igual operador diferente de",
-    "CONDITIONAL":"selecione a condição",
-    "ELSE":"então",
-    "ELSE_IF":"senao",
-    "REPEAT":"Repita_Para",
-    "REPEAT_FROM":"De",
-    "REPEAT_TO":"Até",
-    "REPEAT_THEN":"Faça"
+    "NO": "nao",
+    "RELATIONAL": "Relacionais",
+    "EXCLAMATION": "Exclamação, igual operador diferente de",
+    "CONDITIONAL": "selecione a condição",
+    "ELSE": "então",
+    "ELSE_IF": "senao",
+    "REPEAT": "Repita_Para",
+    "REPEAT_FROM": "De",
+    "REPEAT_TO": "Até",
+    "REPEAT_THEN": "Faça",
+    "FOOTER": {
+      "COPYRIGHT": "LUMIA - Laboratório de Usabilidade, Mídias e Inteligência Artificial.",
+      "ALL_RIGHTS": "Todos os direitos reservados.",
+      "VERSION": "Versão"
+    }
+  },
+  "ACCESSIBLE_MATH": {
+    "MULTIPLY": "vezes",
+    "DIVIDE": "dividido por",
+    "ADD": "mais",
+    "SUBTRACT": "menos",
+    "GREATER": "maior que",
+    "LESS": "menor que",
+    "GREATER_EQUAL": "maior ou igual a",
+    "LESS_EQUAL": "menor ou igual a",
+    "EQUAL": "é igual a",
+    "NOT_EQUAL": "diferente de",
+    "RECEIVE": "recebe",
+    "SEMICOLON": "ponto e vírgula"
   },
   "COMANDS": {
     "TITLE": "Comandos",
-    "TITLE2":"Faça",
+    "TITLE2": "Faça",
     "BUTTON": {
       "NEW_VARIABLE": "Nova Variável",
       "MATH": "Atribuição/Matemática",
@@ -72,18 +100,45 @@
       "WHILE": "Repita N Vezes"
     }
   },
-  "VARIABLE":{
+  "VARIABLE": {
     "INT": "inteiro",
     "REAL": "real",
     "TEXT": "texto",
     "LOGIC": "lógico",
-    "TYPE": "Tipo Variável"
+    "TYPE": "Tipo Variável",
+    "NAME": "nome da variável"
   },
-  "WRITE":{
+  "WRITE": {
     "SELECT_OPERATION": "Selecione a variável para atribuir a operação"
   },
-  "TERMINAL":{
+  "TERMINAL": {
     "START": "Começo da execução...",
     "FINISH": "Fim da execução..."
+  },
+  "CONSENT_MODAL": {
+    "TITLE": "Aviso de Consentimento para Monitoramento",
+    "DESCRIPTION": "Este ambiente coleta dados de interação sobre o processo de aprendizagem em programação, a coleta ocorre apenas após o acionamento do botão de \"Monitorar Desempenho\" e cessa após clicar no botão \"Encerrar Monitoramento e Baixar Log\".",
+    "COLLECTED_DATA_TITLE": "Dados Coletados:",
+    "COLLECTED_DATA_1": "Data e hora de início e término da atividade.",
+    "COLLECTED_DATA_2": "Tempo total gasto na resolução.",
+    "COLLECTED_DATA_3": "Histórico de versões do código a cada tentativa de compilação.",
+    "COLLECTED_DATA_4": "ID da atividade em execução.",
+    "USAGE_TITLE": "Uso e Armazenamento:",
+    "USAGE_1": "Os dados são armazenados localmente no seu navegador e exportados em formato TXT ao final do monitoramento.",
+    "USAGE_2": "Podendo ser usadas para análise e melhoria de desempenho.",
+    "RIGHTS_TITLE": "Seus Direitos:",
+    "RIGHTS_1": "O monitoramento é opcional.",
+    "RIGHTS_2": "Você pode interromper a coleta a qualquer momento clicando em 'Encerrar Monitoramento', sem penalidades.",
+    "CHECKBOX": "Compreendo as informações acima e consinto com o monitoramento da minha atividade.",
+    "CANCEL": "Cancelar",
+    "CONSENT": "Consentir"
+  },
+  "ACCESSIBILITY": {
+    "SKIP_LINKS": "Links de Salto",
+    "MAIN_MENU": "Menu Principal",
+    "TOGGLE_NAVIGATION": "Alternar navegação",
+    "LOGO_IVPROG": "Logo iVProg Forms",
+    "LOGO_LUMIA": "Logo Lumia",
+    "SELECT_LANGUAGE": "Selecionar idioma"
   }
 }

@@ -31,7 +31,7 @@
         </div>
 
         <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
-            <input id="variable-name-{{index}}" type="text" class="form-control" title="nome da variável" [(ngModel)]="variable.name" (keyup.enter)="focusElement('variable-value-' + index)" />
+            <input id="variable-name-{{index}}" type="text" class="form-control" [title]="'VARIABLE.NAME' | translate" [attr.aria-label]="'VARIABLE.NAME' | translate" [(ngModel)]="variable.name" (keyup.enter)="focusElement('variable-value-' + index)" />
         </div>
 
         <div class="col-xl-1 col-lg-2 col-md-2 col-xs-12 d-flex align-items-center">
@@ -39,11 +39,11 @@
         </div>
 
         <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'INTEGER' || variable.type == 'DOUBLE'">
-            <input id="variable-value-{{index}}" type="number" class="form-control" [title]="'VARIABLE.TYPE' | translate" [(ngModel)]="variable.value">
+            <input id="variable-value-{{index}}" type="number" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value">
         </div>
 
         <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'STRING'">
-            <input id="variable-value-{{index}}" type="text" class="form-control" [title]="'VARIABLE.TYPE' | translate" [(ngModel)]="variable.value">
+            <input id="variable-value-{{index}}" type="text" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value" maxlength="30">
         </div>
 
         <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'BOOLEAN'">
@@ -56,11 +56,13 @@
 
     <div class="col-lg-3">
         <div class="d-flex justify-content-end">
-            <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'" [components]="components"
+            <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'COMANDS.TITLE'" [components]="components"
             [variables]="variables" (change)="setStorage()"></app-command-button>
-            <button class="btn btn-transparent" (click)="toggleHidden()">
-                <span *ngIf="isHidden" class="bi bi-unlock-fill" [title]="'GENERAL.READ_CODE' | translate"></span>
-                <span *ngIf="!isHidden" class="bi bi-lock-fill" [title]="'GENERAL.READ_EDIT' | translate"></span>
+            <button class="btn btn-transparent" (click)="toggleHidden()" 
+                    [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
+                    [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
+                <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
+                <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
             </button>
 
             <button class="btn btn-transparent text-danger pr-2" (click)="removeVariable()"

@@ -7,11 +7,41 @@
 
         <div id="ivprog-term" class="bash-body ivprog-term-div">
             <div id="ivprog-terminal-inputdiv">
-                <div id="cmd">
+
+                <div *ngIf="showConsent" id="terminal-consent-box" tabindex="-1" style="color: white; outline: none;">
+                    <h3>{{ 'CONSENT_MODAL.TITLE' | translate }}</h3>
+                    <p>{{ 'CONSENT_MODAL.DESCRIPTION' | translate }}</p>
+                    <div class="modal-actions mt-3">
+                        <button class="btn btn-success me-2" (click)="acceptConsent.emit()">Prosseguir</button>
+                        <button class="btn btn-danger" style="background-color: #ff6b6b; border-color: #ff6b6b;"
+                            (click)="cancelConsent.emit()">Cancelar</button>
+                    </div>
+                </div>
+
+                <div *ngIf="isRecordingLog" id="log-recording-message" tabindex="-1" aria-live="assertive"
+                    class="recording-log-container" style="outline: none;">
+                    <p class="log-ready">[LOG] Monitoramento pronto. Aguardando interações...</p>
+                    <p class="log-recording">[LOG] Gravando atividade<span class="loading-dots">...</span></p>
+                    <p class="log-description">
+                        A gravação está em andamento. Todas as interações estão sendo registradas.<br>
+                        Para encerrar a gravação, clique no botão "Encerrar Gravação".
+                    </p>
+                </div>
+
+                <div *ngIf="isDownloadReady" id="terminal-download-box" tabindex="-1"
+                    style="color: white; outline: none; padding: 10px;" class="d-flex flex-column align-items-start">
+                    <span style="color: #FFEB3B; font-weight: bold; margin-bottom: 12px;">Gravação finalizada.</span>
+                    <button id="btn-download-log" class="btn btn-warning btn-download-log"
+                        (click)="downloadAction.emit()">
+                        <span class="bi bi-download me-2"></span> Baixar relatório da atividade
+                    </button>
+                </div>
+
+                <div id="cmd" *ngIf="!showConsent && !isDownloadReady">
                     <div id="cursor"></div>
 
                     <div *ngIf="isRunning" tabindex="0" id="textTerminal">
-                        <span  tabindex="0">{{ "TERMINAL.START" | translate }}</span>
+                        <span tabindex="0">{{ "TERMINAL.START" | translate }}</span>
                         <span tabindex="0" id="terminalOutput"></span>
                         <span tabindex="0">{{ "TERMINAL.FINISH" | translate }}</span>
                     </div>

@@ -1,6 +1,10 @@
-import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, QueryList, ViewChildren, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { LogService } from './features/logs/services/log.service';
+import { LogExportService } from './features/logs/services/log-export.service';
+import { Log } from './features/logs/models/log.model';
 import { TypesEnum } from './enums/types.enum';
+import { Execucao } from './features/logs/models/execucao.model';
 declare var vcat: any;
 
 @Component({
@@ -10,37 +14,51 @@ declare var vcat: any;
 })
 export class AppComponent {
   title = 'ivprog';
+  isMenuCollapsed = true;
   private pressedAlt: boolean = false;
   components: Array<any> = [];
   isRunning: boolean = false;
+  isMonitoring: boolean = false;
+  private currentLogId?: number;
+  showConsentModal: boolean = false;
+  isRecordingLog: boolean = false;
+  isDownloadReady: boolean = false;
+  downloadableLog: any = null;
+  executionAlertMessage: string = '';
 
   @ViewChildren('input') inputs!: QueryList<ElementRef>;
 
-  constructor(public translate: TranslateService) {
-    
+  constructor(public translate: TranslateService, private logService: LogService, private logExportService: LogExportService) {
+
   }
 
   ngOnInit(): void {
-    let defaultLang: any = sessionStorage.getItem("defaultLang");
+    let defaultLang: any = localStorage.getItem("defaultLang");
 
-    if(!defaultLang || defaultLang == null || defaultLang == "") {
+    if (!defaultLang || defaultLang == null || defaultLang == "") {
       defaultLang = "pt"
     }
-    
+
     this.translate.addLangs(['pt', 'en']);
     this.translate.setDefaultLang(defaultLang);
     this.translate.use(defaultLang);
 
-    const storageComponents = sessionStorage.getItem("components");
+    const storageComponents = localStorage.getItem("components");
 
-    if(storageComponents) {
+    if (storageComponents) {
       this.components = JSON.parse(storageComponents);
     }
+
+    this.getMonitoringInStorage();
   }
 
   changeLanguage(language: string) {
-    sessionStorage.setItem("defaultLang", language);
+    localStorage.setItem("defaultLang", language);
     this.translate.use(language);
+  }
+
+  get currentLanguage() {
+    return this.translate.currentLang || this.translate.defaultLang;
   }
 
   getVariables() {
@@ -90,13 +108,57 @@ export class AppComponent {
 
   clear() {
     this.components = [];
+    this.setStorage();
   }
 
   setStorage() {
-    sessionStorage.setItem("components", JSON.stringify(this.components));
+    localStorage.setItem("components", JSON.stringify(this.components));
+  }
+
+  setMonitoringInStorage() {
+    localStorage.setItem("isMonitoring", this.isMonitoring.toString());
+    localStorage.setItem("currentLogId", this.currentLogId?.toString() || "");
+  }
+
+  deleteMonitoring() {
+    localStorage.removeItem("isMonitoring");
+    localStorage.removeItem("currentLogId");
+  }
+
+  getMonitoringInStorage() {
+    const isMonitoringSession = localStorage.getItem("isMonitoring") === "true";
+    if (isMonitoringSession) {
+      this.isMonitoring = true;
+      this.currentLogId = parseInt(localStorage.getItem("currentLogId") || "0");
+    }
+  }
+
+  validateComponents(components: any[]): boolean {
+    if (!components) return true;
+    for (const c of components) {
+      if (c.type === TypesEnum.CONDITIONAL) {
+        if (!c.value || !c.value.conditionals || c.value.conditionals.length === 0) {
+          return false;
+        }
+        for (const op of c.value.conditionals) {
+          if (!op.type || op.value === '') {
+            return false;
+          }
+        }
+        if (!this.validateComponents(c.value.condition?.components) || !this.validateComponents(c.value.nocondition?.components)) {
+          return false;
+        }
+      } else if (c.type === TypesEnum.FOR_CODITIONAL) {
+        if (!this.validateComponents(c.value.components)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   runCommands(components: any) {
+    // TODO: Vamos executar isso toda vez que o usuário editar o programa e guardar em algum canto
     const currentLang = "pt";
     let programComands = "";
 
@@ -122,19 +184,19 @@ export class AppComponent {
 
     // Other components except variable types
     components.filter((c: any) => c.type != TypesEnum.VARIABLE).forEach((c: any) => {
-      if(c.type == TypesEnum.WRITER) {
-        if(c.value.type == TypesEnum.VARIABLE) {
+      if (c.type == TypesEnum.WRITER) {
+        if (c.value.type == TypesEnum.VARIABLE) {
           programComands += `${currentLang == 'pt' ? 'escreva' : 'write'}(${c.value.value}) \n`;
         } else {
           programComands += `${currentLang == 'pt' ? 'escreva' : 'write'}("${c.value.value}") \n`;
         }
       }
 
-      if(c.type == TypesEnum.OPERATOR) {
+      if (c.type == TypesEnum.OPERATOR) {
         programComands += `${c.value.reference} <- ${c.value.value} \n`;
       }
 
-      if(c.type == TypesEnum.CONDITIONAL) {
+      if (c.type == TypesEnum.CONDITIONAL) {
         programComands += `${currentLang == 'pt' ? 'se' : 'id'} ( ${c.value.condition.value} ) { \n`;
         programComands += this.runCommands(c.value.condition.components);
         programComands += `} ${currentLang == 'pt' ? 'senao' : 'else'} { \n`;
@@ -142,7 +204,7 @@ export class AppComponent {
         programComands += `} \n`;
       }
 
-      if(c.type == TypesEnum.FOR_CODITIONAL) {
+      if (c.type == TypesEnum.FOR_CODITIONAL) {
         programComands += `${currentLang == 'pt' ? 'repita_para' : 'repeat_for'} ${c.value.variable} ${currentLang == 'pt' ? 'de' : 'from'} ${c.value.startValue} ${currentLang == 'pt' ? 'ate' : 'to'} ${c.value.finishValue} ${currentLang == 'pt' ? 'passo' : 'pass'} ${c.value.incrementType}${c.value.incrementValue} { \n`;
         programComands += this.runCommands(c.value.components);
         programComands += `} \n`;
@@ -153,6 +215,18 @@ export class AppComponent {
   }
 
   run() {
+    this.executionAlertMessage = '';
+    const isValid = this.validateComponents(this.components);
+    if (!isValid) {
+      const msg = this.translate.currentLang === 'en' ? "Incomplete conditional structure. Please check the blocks before running." : "Estrutura de decisão incompleta. Verifique os blocos antes de executar.";
+      this.executionAlertMessage = msg;
+      setTimeout(() => {
+        const alertElement = document.getElementById("execution-alert");
+        if (alertElement) alertElement.focus();
+      }, 100);
+      return;
+    }
+
     const currentLang = "pt";
     let programComands = this.runCommands(this.components);
 
@@ -201,6 +275,12 @@ export class AppComponent {
 
     this.isRunning = true;
 
+    let executionOutput = "";
+    const captureOutput = (valor: any) => {
+      executionOutput += valor + "\n";
+      this.terminalOutput(valor);
+    };
+
     try {
       this.clearTerminal();
       vcat.LocalizedStrings.service.setLang("pt");
@@ -209,13 +289,17 @@ export class AppComponent {
       // Registrando um objeto que fornece o minimo necessário para o processador
       // Vê: src/io/ouput.js
       proc.registerOutput({
-        sendOutput: this.terminalOutput,
+        sendOutput: captureOutput,
       });
       // IVProgProcessor.interpretAST é uma função assíncrona
       // Ela devolve o estado final do programa (valores finais das variáveis declaradas dentro da função "inicio" ou no escopo global)
       // A classe Store em src/processor/store/store.ts descreve o parametro mas no contexto atual ele é totalmente irrelevante
       proc.interpretAST().then((_finalProgramState: any) => {
-        console.log("Programa executado com sucesso!")
+        console.log("Programa executado com sucesso!");
+        this.registrarExecucaoLog(programSintax, executionOutput);
+      }).catch((err: any) => {
+        executionOutput += "Erro de execução: " + err + "\n";
+        this.registrarExecucaoLog(programSintax, executionOutput);
       });
     } catch (error: any) {
       // Caso haja erro de sintaxe ou semântico, antes ou durante a interpretação do código uma exceção será lançada
@@ -230,7 +314,9 @@ export class AppComponent {
       else
         console.error(error)
 
+      executionOutput += error.message + "\n";
       this.terminalOutput(error.message);
+      this.registrarExecucaoLog(programSintax, executionOutput);
       // a linha e coluna foi a estrategia pensada para poder associar o erro com o elemento visual que o gerou
       // uma vez que seria possivel associar seções do texto com o elemento que o gerou
     }
@@ -242,8 +328,9 @@ export class AppComponent {
       let textTerminal = document.getElementById("textTerminal");
 
       if (terminalElement && textTerminal) {
-        let terminalContent =  terminalElement.innerHTML;
-        terminalContent += `<p>${valor}</p>`;
+        let terminalContent = terminalElement.innerHTML;
+        let stringValue = (valor === 0 || valor === '0') ? '0 ' : String(valor);
+        terminalContent += `<p>${stringValue}</p>`;
         terminalElement.innerHTML = terminalContent;
         textTerminal.focus();
       }
@@ -260,16 +347,100 @@ export class AppComponent {
     }, 200);
   }
 
+  registrarExecucaoLog(codigo: string, saida: string) {
+    if (this.isMonitoring && this.currentLogId) {
+      const execucao: Execucao = {
+        id: crypto.randomUUID(),
+        timestamp: new Date(),
+        codigo: codigo,
+        saida: saida
+      };
+      this.logService.adicionarExecucao(this.currentLogId, execucao);
+    }
+  }
+
+  async startMonitoring() {
+    const hasConsent = localStorage.getItem('consentimento_coleta');
+    if (hasConsent !== 'true') {
+      this.clear(); // Limpar terminal histórico anterior (opcionalmente apenas clear, já limpa e zera os logs)
+      this.showConsentModal = true;
+      setTimeout(() => { document.getElementById('title-terminal')?.focus(); }, 100);
+      return;
+    }
+
+    this.isMonitoring = true;
+    this.isRecordingLog = true;
+    
+    setTimeout(() => { document.getElementById('log-recording-message')?.focus(); }, 100);
+
+    const id = await this.logService.adicionarLog({
+      dataHoraInicio: new Date(),
+      dataHoraFim: null,
+      execucoes: []
+    });
+    this.currentLogId = id;
+    this.setMonitoringInStorage();
+
+    setTimeout(() => { document.getElementById('btn-gravar-atividade')?.focus(); }, 3500);
+  }
+
+  async stopMonitoring() {
+    this.isMonitoring = false;
+    this.isRecordingLog = false;
+    if (this.currentLogId) {
+      await this.logService.atualizarLog(this.currentLogId, {
+        dataHoraFim: new Date()
+      });
+
+      const log = await this.logService.exportLog(this.currentLogId);
+
+      this.downloadableLog = log;
+      this.isDownloadReady = true;
+      setTimeout(() => { document.getElementById('btn-download-log')?.focus(); }, 100);
+
+      this.currentLogId = undefined;
+      this.deleteMonitoring();
+    }
+  }
+
+  downloadLog() {
+    if (this.downloadableLog) {
+      this.logExportService.exportLogTxt(this.downloadableLog);
+    }
+    this.isDownloadReady = false;
+    this.downloadableLog = null;
+    setTimeout(() => { document.getElementById('title-terminal')?.focus(); }, 100);
+  }
+
+  async handleMonitoring() {
+    if (!this.isMonitoring) {
+      await this.startMonitoring();
+    } else {
+      await this.stopMonitoring();
+    }
+  }
+
+  onConsentCancelled = (): void => {
+    this.showConsentModal = false;
+    setTimeout(() => { document.getElementById('btn-gravar-atividade')?.focus(); }, 100);
+  };
+
+  onConsentAccepted = async (): Promise<void> => {
+    this.showConsentModal = false;
+    localStorage.setItem('consentimento_coleta', 'true');
+    await this.handleMonitoring();
+  };
+
   goToComands() {
     document.getElementById('comands')?.focus();
   }
 
   goToStart() {
-    document.getElementById('inicio')?.focus();
+    document.getElementById('area-comandos')?.focus();
   }
 
-  goToTerminal() {
-    document.getElementById('title-terminal')?.focus();
+  goToGravarAtividade() {
+    document.getElementById('btn-gravar-atividade')?.focus();
   }
 
   goToExecut() {
@@ -287,8 +458,8 @@ export class AppComponent {
       this.pressedAlt = false;
     }
 
-    if (event.altKey && event.code == "KeyT") {
-      this.goToTerminal();
+    if (event.altKey && event.code == "KeyG") {
+      this.goToGravarAtividade();
       this.pressedAlt = false;
     }
 

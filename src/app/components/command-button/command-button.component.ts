@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, HostListener, ElementRef } from '@angular/core';
 import { TypesEnum } from 'src/app/enums/types.enum';
 
 @Component({
@@ -22,7 +22,7 @@ export class CommandButtonComponent implements OnInit {
 
   @Output("change") change = new EventEmitter();
 
-  constructor() { }
+  constructor(private elementRef: ElementRef) { }
 
   ngOnInit(): void {
   }
@@ -88,7 +88,7 @@ export class CommandButtonComponent implements OnInit {
     }, 100);
   }
 
-  addConditional(){
+  addConditional() {
     const conditional = {
       condition: {
         value: '',
@@ -114,7 +114,7 @@ export class CommandButtonComponent implements OnInit {
   }
 
 
-  addFor(){
+  addFor() {
     const forOperator = {
       variable: '',
       startType: '',
@@ -141,6 +141,42 @@ export class CommandButtonComponent implements OnInit {
   }
 
   setStorage() {
+    // TODO: executa toda vez que adiciona um comando
     this.change.emit();
+  }
+
+  @HostListener("window:keydown", ["$event"]) onKeyDown(event: KeyboardEvent) {
+    const activeEl = document.activeElement;
+    const isInsideAnyCommandButton = activeEl?.closest('app-command-button') !== null;
+    const isInsideThisCommandButton = this.elementRef.nativeElement.contains(activeEl);
+
+    // Se o foco estiver dentro de algum command-button, apenas o command-button focado deve disparar o evento.
+    // Caso contrário (foco fora), apenas o command-button raiz (mode == 'block') deve disparar.
+    if (isInsideAnyCommandButton) {
+      if (!isInsideThisCommandButton) return;
+    } else {
+      if (this.mode !== 'block') return;
+    }
+
+    if (event.altKey && event.code === "Digit1" && this.hasVariables) {
+      event.preventDefault();
+      this.addVariable();
+    }
+    if (event.altKey && event.code === "Digit2") {
+      event.preventDefault();
+      this.addOperator();
+    }
+    if (event.altKey && event.code === "Digit3") {
+      event.preventDefault();
+      this.addWriter();
+    }
+    if (event.altKey && event.code === "Digit4") {
+      event.preventDefault();
+      this.addConditional();
+    }
+    if (event.altKey && event.code === "Digit5") {
+      event.preventDefault();
+      this.addFor();
+    }
   }
 }
