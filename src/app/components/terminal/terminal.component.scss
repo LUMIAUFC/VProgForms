@@ -51,6 +51,10 @@
     overflow: scroll;
 }
 
+.acessible-terminal {
+    padding: 1.5rem;
+}
+
 .acessible-terminal .bash-title {
     border-radius: 10px 10px 0 0;
 }
@@ -117,5 +121,11 @@ p {
     .bi {
         font-size: 20px;
         font-weight: bold;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .acessible-terminal {
+        padding: 1.5rem .25rem;
     }
 }

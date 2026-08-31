@@ -1,17 +1,17 @@
-<div class="mb-2 col-lg-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="for">
-    <div class="row py-2 px-2 content">
-        <div *ngIf="!isHidden" class="col-lg-10 d-flex justify-content-start text">
+<div class="mb-2 col-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="for">
+    <div class="row py-2 px-2 content align-items-start">
+        <div *ngIf="!isHidden" class="col-12 col-lg-10 d-flex justify-content-start text py-1">
             <p class="mb-0 text-left" [id]="'for-cod-'+ index" tabindex="0">
                 <span [innerHTML]="commandsPlainText"></span>
             </p>
         </div>
 
-        <div *ngIf="isHidden" class="d-flex flex-column col-8 col-lg-10 for justify-content-center">
-            <div class="row row-cols-2">
+        <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-10 for justify-content-center py-1">
+            <div class="row row-cols-1 row-cols-md-2 g-2 mb-2">
                 <div class="col">
-                    <div class="d-flex justify-content-center align-items-center pl-3">
-                        <span class="blue"  id="for-select-{{index}}" tabindex="-1">{{ "GENERAL.REPEAT" | translate }}</span>
-                        <select id="for-select-var-{{index}}" class="ml-2 col form-select" [(ngModel)]="for.variable" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
+                    <div class="d-flex flex-wrap align-items-center justify-content-start gap-1">
+                        <span class="blue me-1" id="for-select-{{index}}" tabindex="-1">{{ "GENERAL.REPEAT" | translate }}</span>
+                        <select id="for-select-var-{{index}}" class="form-select flex-grow-1" [(ngModel)]="for.variable" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
                             <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                             <option *ngIf="variables.length" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
@@ -20,57 +20,57 @@
                 </div>
 
                 <div class="col">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span tabindex="0">{{ "GENERAL.REPEAT_FROM" | translate }}</span>
-                        <select id="for-start-type-{{index}}" class="ml-1 form-select" [(ngModel)]="for.startType"  (change)="clearStartValue()" [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
+                    <div class="d-flex flex-wrap align-items-center justify-content-start gap-1">
+                        <span class="me-1" tabindex="0">{{ "GENERAL.REPEAT_FROM" | translate }}</span>
+                        <select id="for-start-type-{{index}}" class="form-select" [(ngModel)]="for.startType" (change)="clearStartValue()" [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
                             <option [ngValue]="''" disabled>{{ "GENERAL.SELECT" | translate }}</option>
                             <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
                             <option [ngValue]="'VALUE'">{{ "GENERAL.VALUE" | translate }}</option>
                         </select>
 
-                        <select id="for-start-value-{{index}}" class="ml-1 form-select" *ngIf="for.startType == 'VARIABLE'" [(ngModel)]="for.startValue" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
+                        <select id="for-start-value-{{index}}" class="form-select" *ngIf="for.startType == 'VARIABLE'" [(ngModel)]="for.startValue" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
                             <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                             <option *ngIf="variables.length" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
                         </select>
 
-                        <input id="for-start-value-{{index}}" class="ml-1 form-control" *ngIf="for.startType == 'VALUE'" [(ngModel)]="for.startValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
+                        <input id="for-start-value-{{index}}" class="form-control" *ngIf="for.startType == 'VALUE'" [(ngModel)]="for.startValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
                 </div>
             </div>
 
-            <div class="row row-cols-3">
-                <div class="col-7">
-                    <div class="d-flex justify-content-center align-items-center p-3">
-                        <span tabindex="0">{{ "GENERAL.REPEAT_TO" | translate }}</span>
-                        <select id="for-finish-type-{{index}}" class="ml-1 form-select" [(ngModel)]="for.finishType" (change)="clearFinishValue()" [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
+            <div class="row row-cols-1 row-cols-md-3 g-2 align-items-center mb-2">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="d-flex flex-wrap align-items-center justify-content-start gap-1">
+                        <span class="me-1" tabindex="0">{{ "GENERAL.REPEAT_TO" | translate }}</span>
+                        <select id="for-finish-type-{{index}}" class="form-select" [(ngModel)]="for.finishType" (change)="clearFinishValue()" [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
                             <option [ngValue]="''" disabled>{{ "GENERAL.SELECT" | translate }}</option>
                             <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
                             <option [ngValue]="'VALUE'">{{ "GENERAL.VALUE" | translate }}</option>
                         </select>
 
-                        <select id="for-finish-value-{{index}}" class="ml-1 form-select" *ngIf="for.finishType == 'VARIABLE'" [(ngModel)]="for.finishValue" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
+                        <select id="for-finish-value-{{index}}" class="form-select" *ngIf="for.finishType == 'VARIABLE'" [(ngModel)]="for.finishValue" (change)="setStorage()" [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
                             <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                             <option *ngIf="variables.length" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
                         </select>
 
-                        <input id="for-finish-value-{{index}}" class="ml-1 form-control" *ngIf="for.finishType == 'VALUE'" [(ngModel)]="for.finishValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
+                        <input id="for-finish-value-{{index}}" class="form-control" *ngIf="for.finishType == 'VALUE'" [(ngModel)]="for.finishValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
                 </div>
 
-                <div class="col-4 p-0">
-                    <div class="d-flex justify-content-center align-items-center pt-3 pb-3">
-                        <select id="for-increment-type-{{index}}" class="ml-1 form-select" [(ngModel)]="for.incrementType" (change)="setStorage()" [title]="'GENERAL.SELECT_OPERATOR' | translate" [attr.aria-label]="'GENERAL.SELECT_OPERATOR' | translate">
+                <div class="col-12 col-md-4 col-lg-5">
+                    <div class="d-flex flex-wrap align-items-center justify-content-start gap-1">
+                        <select id="for-increment-type-{{index}}" class="form-select" [(ngModel)]="for.incrementType" (change)="setStorage()" [title]="'GENERAL.SELECT_OPERATOR' | translate" [attr.aria-label]="'GENERAL.SELECT_OPERATOR' | translate">
                             <option [ngValue]="''" disabled>{{ "GENERAL.SELECT" | translate }}</option>
                             <option [ngValue]="'+'" [attr.aria-label]="'GENERAL.INCREMENT' | translate" [title]="'GENERAL.INCREMENT' | translate">++</option>
                             <option [ngValue]="'-'" [attr.aria-label]="'GENERAL.DECREMENT' | translate" [title]="'GENERAL.DECREMENT' | translate">&minus;&minus;</option>
                         </select>
-                        <input id="for-increment-value-{{index}}" class="ml-1 form-control" [(ngModel)]="for.incrementValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.STEP_VALUE' | translate" [attr.aria-label]="'GENERAL.STEP_VALUE' | translate" />
+                        <input id="for-increment-value-{{index}}" class="form-control" [(ngModel)]="for.incrementValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.STEP_VALUE' | translate" [attr.aria-label]="'GENERAL.STEP_VALUE' | translate" />
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center col-1">
+                <div class="col-12 col-md-2 col-lg-1 d-flex justify-content-start justify-content-md-center align-items-center">
                     <app-command-button 
                         [mode]="'inline'" 
                         [title]="'Adicionar comandos à repetição'" 
@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-            <div class="row d-flex flex-wrap zindex col">
+            <div class="row d-flex flex-wrap zindex col mt-2">
                 <div class="row" *ngFor="let component of for.components; let i = index;">
                     <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [writer]="component.value" [components]="for.components" [variables]="variables"
@@ -108,27 +108,29 @@
             </div>
         </div>
 
-        <div class="col-4 col-lg-2">
-            <app-command-button 
-                *ngIf="hasToggle" 
-                [mode]="'inline'" 
-                [text]="false" 
-                [title]="'Comandos'"
-                [components]="components" 
-                [variables]="variables"
-                (change)="setStorage()">
-            </app-command-button>
+        <div class="col-12 col-lg-2 py-1">
+            <div class="d-flex justify-content-end align-items-center">
+                <app-command-button 
+                    *ngIf="hasToggle" 
+                    [mode]="'inline'" 
+                    [text]="false" 
+                    [title]="'Comandos'"
+                    [components]="components" 
+                    [variables]="variables"
+                    (change)="setStorage()">
+                </app-command-button>
 
-            <button class="btn btn-transparent" (click)="toggleHidden()"
-                    [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
-                    [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
-                <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
-                <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
-            </button>
+                <button class="btn btn-transparent" (click)="toggleHidden()"
+                        [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
+                        [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
+                    <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
+                    <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
+                </button>
 
-            <button class="btn btn-transparent text-danger pr-2" (click)="removeFor()" [title]="'GENERAL.REMOVE_COMANDS' | translate ">
-                <span aria-hidden="true">X</span>
-            </button>
+                <button class="btn btn-transparent text-danger pr-2" (click)="removeFor()" [title]="'GENERAL.REMOVE_COMANDS' | translate ">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

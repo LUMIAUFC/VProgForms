@@ -1,34 +1,32 @@
-<div class="mb-2 d-flex col-12 align-items-center px-4 py-2 back write" [ngClass]="back == true ? 'new-back' : ''">
-    <div *ngIf="!isHidden" class="col-lg-9 d-flex justify-content-start">
+<div class="mb-2 d-flex flex-wrap col-12 align-items-center px-3 py-2 back write" [ngClass]="back == true ? 'new-back' : ''">
+    <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
         <p class="mb-0" [id]="'writer-cod-' + idElement" tabindex="0">
             <span>{{ "GENERAL.WRITE" | translate }}</span>
             <span> {{writer.value}};</span>
         </p>
     </div>
 
-    <div *ngIf="isHidden" class="col-lg-9 d-flex justify-content-start">
-        <div class="col col-xs-12 d-flex align-items-center">
-            <span for="receive" tabindex="0" [title]="'GENERAL.RECEIVE' | translate">{{ "GENERAL.WRITE" | translate }}</span>
-        </div>
+    <div *ngIf="isHidden" class="col-12 col-lg-9 d-flex flex-wrap align-items-center gap-2 py-1">
+        <span for="receive" class="me-1" tabindex="0" [title]="'GENERAL.RECEIVE' | translate">{{ "GENERAL.WRITE" | translate }}</span>
 
-        <select [id]="'write-type-' + idElement" [(ngModel)]="writer.type" (change)="changeType()" class="ml-3 form-select">
+        <select [id]="'write-type-' + idElement" [(ngModel)]="writer.type" (change)="changeType()" class="form-select write-select">
             <option [ngValue]="''" disabled *ngIf="writer.type ==''">{{ "GENERAL.SELECT" | translate }}</option>
             <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
             <option [ngValue]="'TEXT'">{{ "GENERAL.TEXT" | translate }}</option>
         </select>
 
-        <select [(ngModel)]="writer.value" (change)="setStorage()" *ngIf="writer.type == 'VARIABLE'" class="ml-3 form-select">
+        <select [(ngModel)]="writer.value" (change)="setStorage()" *ngIf="writer.type == 'VARIABLE'" class="form-select write-select">
             <option *ngIf="variables.length && writer.value==''" disabled [ngValue]="''">{{ "WRITE.SELECT_OPERATION" | translate }}</option>
             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
             <option *ngIf="!variables.length && writer.value==''" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
         </select>
 
-        <input class="ml-3 form-control" [(ngModel)]="writer.value" *ngIf="writer.type == 'TEXT'" type="text" (change)="setStorage()"
+        <input class="form-control write-input" [(ngModel)]="writer.value" *ngIf="writer.type == 'TEXT'" type="text" (change)="setStorage()"
             [placeholder]=" 'GENERAL.DIGIT' | translate " />
     </div>
 
-    <div class="col-lg-3">
-        <div class="d-flex justify-content-end">
+    <div class="col-12 col-lg-3 py-1">
+        <div class="d-flex justify-content-end align-items-center">
             <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'" [components]="components"
             [variables]="variables" (change)="setStorage()"></app-command-button>
             <button class="btn btn-transparent" (click)="toggleHidden()" 

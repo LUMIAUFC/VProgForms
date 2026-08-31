@@ -4,8 +4,8 @@
     <a href="#btn-gravar-atividade" class="visually-hidden-focusable">Saltar para Gravar Atividade</a>
     <a href="#btn-dropdown-comandos" class="visually-hidden-focusable">Saltar para Lista de Comandos</a>
   </nav>
-  <div class="app-container d-flex justify-content-center px-4">
-    <div class="back-blue rounded">
+  <div class="app-container d-flex justify-content-center">
+    <div class="back-blue">
       <header class="d-flex align-items-center py-4 px-4">
         <nav class="navbar navbar-expand-xl navbar-dark" [attr.aria-label]="'ACCESSIBILITY.MAIN_MENU' | translate">
           <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed"
@@ -63,70 +63,68 @@
             </div>
           </div>
           <img src="../assets/images/logo_VprogForms.png" [attr.alt]="'ACCESSIBILITY.LOGO_IVPROG' | translate"
-            class="logo-ivprog ms-2" />
+            class="logo-ivprog" />
         </div>
       </header>
 
       <div id="area-comandos-terminal" class="d-flex flex-column">
         <section id="area-comandos" role="region" [attr.aria-label]="'GENERAL.TITLE' | translate" tabindex="-1">
-          <div class="col-12 px-4 pt-4">
+          <div class="col-12 area-comandos-wrapper">
             <fieldset>
               <legend class="p-1">
                 <h2 id="inicio"><strong> {{ "GENERAL.TITLE" | translate }}</strong></h2>
               </legend>
 
-              <div class="row">
-                <div class="col-12 pt-1 pb-4 px-4" style="text-align: right;">
-                  <div class="area-terminal-comandos-comandos px-4 py-1">
-                    <div *ngFor="let component of components; let i = index;">
-                      <app-variable *ngIf="isVariable(component)" [index]="i" [variable]="component.value"
-                        [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
-                        (change)="setStorage()">
-                      </app-variable>
+              <div class="col-12 pt-1 pb-4 px-4" style="text-align: right;">
+                <div class="area-terminal-comandos-comandos px-4 py-1">
+                  <div *ngFor="let component of components; let i = index;">
+                    <app-variable *ngIf="isVariable(component)" [index]="i" [variable]="component.value"
+                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      (change)="setStorage()">
+                    </app-variable>
 
-                      <app-write *ngIf="isWriter(component)" [index]="i" [writer]="component.value"
-                        [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
-                        (change)="setStorage()">
-                      </app-write>
+                    <app-write *ngIf="isWriter(component)" [index]="i" [writer]="component.value"
+                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      (change)="setStorage()">
+                    </app-write>
 
-                      <app-operator *ngIf="isOperator(component)" [index]="i" [operator]="component.value"
-                        [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
-                        (change)="setStorage()">
-                      </app-operator>
+                    <app-operator *ngIf="isOperator(component)" [index]="i" [operator]="component.value"
+                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      (change)="setStorage()">
+                    </app-operator>
 
-                      <app-conditional *ngIf="isConditional(component)" [index]="i" [conditional]="component.value"
-                        [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
-                        (change)="setStorage()">
-                      </app-conditional>
+                    <app-conditional *ngIf="isConditional(component)" [index]="i" [conditional]="component.value"
+                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      (change)="setStorage()">
+                    </app-conditional>
 
-                      <app-for *ngIf="isFor(component)" [index]="i" [for]="component.value" [components]="components"
-                        [variables]="getVariables()" (remove)="removeComponent($event)" (change)="setStorage()">
-                      </app-for>
-                    </div>
+                    <app-for *ngIf="isFor(component)" [index]="i" [for]="component.value" [components]="components"
+                      [variables]="getVariables()" (remove)="removeComponent($event)" (change)="setStorage()">
+                    </app-for>
                   </div>
+                </div>
 
-                  <div id="botoes" class="d-flex flex-wrap pt-4 gap-2 justify-content-end">
-                    <button id="btn-gravar-atividade" class="btn btn-sm p-3" (click)="handleMonitoring()"
-                      [ngClass]="isMonitoring ? 'btn-active-recording' : 'btn-ready-recording'"
-                      [title]="isMonitoring ? ('GENERAL.MENU.ALT_M_OFF' | translate) : ('GENERAL.MENU.ALT_M' | translate)">
-                      <i class="bi" [ngClass]="isMonitoring ? 'bi-stop-fill' : 'bi-play-fill'"></i>
-                      {{ isMonitoring ? ('GENERAL.MENU.MONITOR_OFF' | translate) : ("GENERAL.MENU.MONITOR" | translate)
-                      }}
-                    </button>
-                    <app-command-button [components]="components" [variables]="getVariables()"
-                      (change)="setStorage()"></app-command-button>
-                    <div id="execution-alert" aria-live="assertive" tabindex="-1" class="sr-only">
-                      {{ executionAlertMessage }}
-                    </div>
-                    <button class="btn btn-success p-3" id="runCodeButton" type="button" (click)="run()">
-                      {{ "GENERAL.BUTTON.RUN" | translate }}
-                      <span class="bi bi-play-fill mt-3 space-icon"></span>
-                    </button>
-                    <button class="btn btn-danger p-3" id="cleanCommands" type="button" (click)="clear()">
-                      {{ "GENERAL.BUTTON.DELETE" | translate }}
-                      <span class="bi bi-trash-fill space-icon"></span>
-                    </button>
+                <div id="botoes" class="d-flex flex-wrap pt-4 gap-2 justify-content-end">
+                  <button id="btn-gravar-atividade" class="btn btn-sm p-3" (click)="handleMonitoring()"
+                    [ngClass]="isMonitoring ? 'btn-active-recording' : 'btn-ready-recording'"
+                    [title]="isMonitoring ? ('GENERAL.MENU.ALT_M_OFF' | translate) : ('GENERAL.MENU.ALT_M' | translate)">
+                    <i class="bi" [ngClass]="isMonitoring ? 'bi-stop-fill' : 'bi-play-fill'"></i>
+                    {{ isMonitoring ? ('GENERAL.MENU.MONITOR_OFF' | translate) : ("GENERAL.MENU.MONITOR" | translate)
+                    }}
+                  </button>
+                  <app-command-button [components]="components" [variables]="getVariables()"
+                    (change)="setStorage()"></app-command-button>
+                  <div id="execution-alert" aria-live="assertive" tabindex="-1" class="sr-only">
+                    {{ executionAlertMessage }}
                   </div>
+                  <button class="btn btn-success p-3" id="runCodeButton" type="button" (click)="run()">
+                    {{ "GENERAL.BUTTON.RUN" | translate }}
+                    <span class="bi bi-play-fill mt-3 space-icon"></span>
+                  </button>
+                  <button class="btn btn-danger p-3" id="cleanCommands" type="button" (click)="clear()">
+                    {{ "GENERAL.BUTTON.DELETE" | translate }}
+                    <span class="bi bi-trash-fill space-icon"></span>
+                  </button>
                 </div>
               </div>
             </fieldset>

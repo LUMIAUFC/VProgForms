@@ -1,6 +1,6 @@
-<div class="mb-2 col-lg-12 px-1 back write" [ngClass]="back == true ? 'new-back' : ''">
-    <div class="row py-2 px-4 content">
-        <div *ngIf="!isHidden" class="col-lg-9 d-flex justify-content-start">
+<div class="mb-2 col-12 px-1 back write" [ngClass]="back == true ? 'new-back' : ''">
+    <div class="row py-2 px-3 content align-items-center">
+        <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
             <p class="mb-0" [id]="'operator-cod-'+ index" tabindex="0">
                 <span>{{operator.reference}}</span>
                 <span [innerHTML]="'<-' | accessibleMath"></span>
@@ -9,67 +9,55 @@
             </p>
         </div>
 
-        <div *ngIf="isHidden" class="col-lg-9 operator">
-            <div class="d-flex justify-content-center align-items-center">
-                <select [id]="'select-var-' + index" [(ngModel)]="operator.currentVariable" [compareWith]="compareFn" class="ml-2 col form-select" (change)="changeVariable()">
+        <div *ngIf="isHidden" class="col-12 col-lg-9 operator py-1">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                <select [id]="'select-var-' + index" [(ngModel)]="operator.currentVariable" [compareWith]="compareFn" class="form-select select-main-var" (change)="changeVariable()">
                     <option *ngIf="variables.length && operator.name ==''" disabled [ngValue]="undefined">{{ "GENERAL.SELECT_VARIABLE" | translate }} </option>
                     <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                     <option *ngFor="let v of variables" [ngValue]="v.value">{{v.value.name}}</option>
                 </select>
 
-                <!-- <ng-select #ngSelect 
-                    id="select-var-{{index}}" 
-                    class="ml-2 col form-select"
-                    [searchable]="false"
-                    (change)="changeVariable()" 
-                    [(ngModel)]="currentVariable" 
-                    notFoundText="Ainda não existem variáveis criadas!"
-                    placeholder="Selecione a variável">
-                    <ng-option *ngFor="let v of variables" [value]="v.value">{{v.value.name}}</ng-option>
-                 </ng-select> -->
-
-                <span class="rigth" tabindex="0">{{ "GENERAL.RECEIVE" | translate }}</span>
+                <span class="rigth me-2" tabindex="0">{{ "GENERAL.RECEIVE" | translate }}</span>
             </div>
 
-            <div class="d-flex align-items-center" *ngFor="let op of operator.operators; let i = index">
-                <div class="col">
-                    <select class="ml-1 form-select" id="operator-op-{{index}}-{{op.index}}" *ngIf="op.type == 'PARENTHESIS'" [(ngModel)]="op.value" (change)="changeValue()">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-2" *ngFor="let op of operator.operators; let i = index">
+                <div class="op-col" *ngIf="op.type == 'PARENTHESIS'">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
                         <option disabled [ngValue]="''">{{ "GENERAL.SELECT_PAR" | translate }}</option>
                         <option [ngValue]="'('" [title]="'GENERAL.OPEN_PARENTHESES' | translate">(</option>
                         <option [ngValue]="')'" [title]="'GENERAL.CLOSE_PARENTHESES' | translate">)</option>
                     </select>
                 </div>
 
-                <div class="col">
-                    <select class="ml-1 form-select" id="operator-op1-{{index}}-{{op.index}}" *ngIf="op.type == 'ATTRIBUTE' || op.type == 'VARIABLE' || op.type == 'VALUE'" [(ngModel)]="op.type" (change)="clearValue(op)">
+                <div class="op-col" *ngIf="op.type == 'ATTRIBUTE' || op.type == 'VARIABLE' || op.type == 'VALUE'">
+                    <select class="form-select" id="operator-op1-{{index}}-{{op.index}}" [(ngModel)]="op.type" (change)="clearValue(op)">
                         <option [ngValue]="'ATTRIBUTE'" disabled>{{ "GENERAL.SELECT" | translate }}</option>
                         <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
                         <option [ngValue]="'VALUE'">{{ "GENERAL.VALUE" | translate }}</option>
                     </select>
                 </div>
 
-                <div class="col">
-                    <select class="ml-1 form-select" *ngIf="op.type == 'VARIABLE'" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                <div class="op-col" *ngIf="op.type == 'VARIABLE'">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
                         <option *ngIf="getVariables().length && op.value == ''" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
                         <option *ngIf="!getVariables().length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                         <option *ngFor="let v of getVariables()" [ngValue]="v.value.name">{{v.value.name}}</option>
                     </select>
                 </div>
 
-                <div class="col">
-                    <input class="ml-1 form-control" id="operator-op-{{index}}-{{op.index}}" *ngIf="op.type == 'VALUE' && operator.currentVariable.type != 'BOOLEAN'"
+                <div class="op-col" *ngIf="op.type == 'VALUE'">
+                    <input class="form-control" id="operator-op-{{index}}-{{op.index}}" *ngIf="operator.currentVariable.type != 'BOOLEAN'"
                         [(ngModel)]="op.value" (keyup)="changeInputValue(op)" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" />
 
-                    <select class="ml-1 form-select" *ngIf="op.type == 'VALUE' && operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" *ngIf="operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
                         <option disabled [ngValue]="''">{{ "GENERAL.SELECT_VALUE" | translate }}</option>
                         <option [ngValue]="'verdadeiro'">{{ "GENERAL.TRUE" | translate }}</option>
                         <option [ngValue]="'falso'">{{ "GENERAL.FALSE" | translate }}</option>
                     </select>
                 </div>
 
-    
-                <div class="col">
-                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" *ngIf="op.type == 'OPERATOR'" [(ngModel)]="op.value" (change)="changeValue()">
+                <div class="op-col" *ngIf="op.type == 'OPERATOR'">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
                         <option [ngValue]="''" disabled *ngIf="op.value == ''">{{ "GENERAL.SELECT_OPERATOR" | translate }}</option>
                         <option [ngValue]="'+'">
                             <span class="sr-only">&#43;</span>
@@ -85,13 +73,13 @@
                         </option>
                     </select>
                 </div>
-                <div class="col">
+
+                <div class="op-col">
                     <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clearOperator(i)"><i class="bi bi-trash"></i></button>
                 </div>
-
             </div>
 
-            <div ngbDropdown class="d-flex align-items-center" *ngIf="operator.currentVariable">
+            <div ngbDropdown class="d-flex align-items-center mt-1" *ngIf="operator.currentVariable">
                 <button type="button" class="btn btn-primary" id="dropdownAdd" ngbDropdownToggle>
                     <span aria-hidden="true">+</span>
                     <strong aria-hidden="false" class="sr-only">{{ "GENERAL.ADD" | translate }}</strong>
@@ -119,23 +107,25 @@
             </div>
         </div>
 
-        <div class="col-lg-3">
-            <app-command-button 
-                [mode]="'inline'" 
-                [text]="false" 
-                [title]="'Comandos'"
-                [components]="components" 
-                [variables]="variables"
-                (change)="setStorage()"
-            ></app-command-button>
-            <button class="btn btn-transparent" (click)="toggleHidden()"
-                    [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
-                    [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
-                <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
-                <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
-            </button>
+        <div class="col-12 col-lg-3 py-1">
+            <div class="d-flex justify-content-end align-items-center">
+                <app-command-button 
+                    [mode]="'inline'" 
+                    [text]="false" 
+                    [title]="'Comandos'"
+                    [components]="components" 
+                    [variables]="variables"
+                    (change)="setStorage()"
+                ></app-command-button>
+                <button class="btn btn-transparent" (click)="toggleHidden()"
+                        [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
+                        [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
+                    <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
+                    <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
+                </button>
 
-            <button class="btn btn-transparent text-danger pr-2" (click)="removeOperator()" [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+                <button class="btn btn-transparent text-danger pr-2" (click)="removeOperator()" [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+            </div>
         </div>
     </div>
 </div>

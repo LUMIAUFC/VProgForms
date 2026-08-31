@@ -1,5 +1,5 @@
 input{
-    width: 47px;
+    width: 5rem;
 }
 
 select{
@@ -16,9 +16,17 @@ select{
     flex-wrap: wrap;
     flex-direction: row;
 }
-input{
-    width: 5rem;
+
+.select-main-var {
+    width: auto;
+    min-width: 140px;
 }
+
+.op-col {
+    display: inline-flex;
+    align-items: center;
+}
+
 .more{
     margin-left: 10px;
     margin-right: 10px;
@@ -32,7 +40,6 @@ input{
     border: none;
 }
 
-
 .new-back{
     background-color: #ffb0dd;
 }
@@ -40,3 +47,14 @@ input{
 .dropdown-toggle::after{
     display: none !important;
 }
+
+@media screen and (max-width: 576px) {
+    .select-main-var {
+        width: 100%;
+    }
+    .op-col {
+        .form-control, .form-select {
+            width: 100%;
+        }
+    }
+}

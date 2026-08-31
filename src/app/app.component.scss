@@ -74,6 +74,8 @@ h2 {
 .area-terminal-comandos-comandos {
   height: 25vh;
   overflow-y: auto;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 .btn-ready-recording {
@@ -119,7 +121,16 @@ h2 {
 }
 
 .logo-ivprog {
-  height: 68px;
+  width: 100%;
+  max-width: 192px;
+  height: auto;
+  margin-left: 0.5rem;
+}
+
+.area-comandos-wrapper {
+  padding-top: 1.5rem;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 footer {
@@ -140,5 +151,29 @@ footer {
 
   span {
     font-weight: 300;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .logo-ivprog {
+    max-width: 128px;
+    margin-left: 0.25rem;
+  }
+
+  #area-comandos-terminal {
+    margin: 0 4px;
+  }
+
+  .area-comandos-wrapper {
+    padding-right: 0.25rem;
+    padding-left: 0.25rem;
+  }
+
+  .area-terminal-comandos-comandos {
+    height: 100%;
+    min-height: 156px;
+    max-height: 396px;
+    padding-right: .25rem;
+    padding-left: .25rem;
   }
 }

@@ -1,13 +1,13 @@
-<div class="mb-2 col-lg-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="conditional">
-    <div class="row py-2 px-4 content">
-        <div *ngIf="!isHidden" class="col-lg-8 d-flex justify-content-start">
+<div class="mb-2 col-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="conditional">
+    <div class="row py-2 px-3 content align-items-start">
+        <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
             <p class="mb-0 text-left" [id]="'conditional-cod-'+ index" tabindex="0">
                 <span [innerHTML]="commandsPlainText"></span>
             </p>
         </div>
 
-        <div *ngIf="isHidden" class="d-flex flex-column col-8 col-lg-9 conditional">
-            <div class="d-flex flex-wrap">
+        <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-9 conditional py-1">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                 <div class="d-flex justify-content-center align-items-center position-relative">
                     <span class="rigth" tabindex="0">{{'GENERAL.IF' | translate }}</span>
                     <span aria-hidden="true">&#40; </span>
@@ -15,8 +15,8 @@
                         }}</span>
                 </div>
 
-                <div class="d-flex align-items-center" *ngFor="let op of conditional.conditionals">
-                    <div class="col">
+                <div class="d-flex flex-wrap align-items-center gap-2" *ngFor="let op of conditional.conditionals">
+                    <div class="cond-col">
                         <select class="form-select" id="conditional-op-{{index}}-{{op.index}}"
                             *ngIf="op.type != 'CONDITIONAL'" [(ngModel)]="op.type" (change)="clearValue(op)"
                             [title]="'GENERAL.SELECT_DATA_TYPE' | translate"
@@ -27,8 +27,8 @@
                         </select>
                     </div>
 
-                    <div class="col">
-                        <select id="conditional-op-{{index}}-{{op.index}}" class="ml-2 form-select"
+                    <div class="cond-col">
+                        <select id="conditional-op-{{index}}-{{op.index}}" class="form-select"
                             *ngIf="op.type == 'VARIABLE'" [(ngModel)]="op.value" (change)="changeValue()"
                             [title]="'GENERAL.SELECT_VARIABLE' | translate"
                             [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
@@ -40,7 +40,7 @@
                         </select>
                     </div>
 
-                    <div class="col">
+                    <div class="cond-col">
                         <input id="conditional-op-{{index}}-{{op.index}}" class="form-control"
                             *ngIf="op.type == 'VALUE'" [(ngModel)]="op.valueString" (keyup)="changeInputValue(op)"
                             type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate"
@@ -48,7 +48,7 @@
                             [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
 
-                    <div class="col">
+                    <div class="cond-col">
                         <select class="form-select conditional-dropdown" *ngIf="op.type == 'CONDITIONAL'"
                             id="conditional-op-{{index}}-{{op.index}}" tabindex="0" [(ngModel)]="op.value"
                             (change)="changeConditional(op, op.value, op.index)"
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center position-relative">
-                    <button class="btn btn-primary more mr-2" *ngIf="conditional.conditionals.length" type="button"
+                    <button class="btn btn-primary more mx-1" *ngIf="conditional.conditionals.length" type="button"
                         (click)="addConditional()">
                         <strong aria-hidden="true">+</strong>
                         <strong aria-hidden="false" class="sr-only">{{'GENERAL.CONDITIONAL' | translate }}</strong>
@@ -95,35 +95,37 @@
                     </span>
                 </div>
 
-                <div>
+                <div class="d-flex align-items-center gap-1 ms-2">
                     <span tabindex="0">{{'GENERAL.ELSE' | translate }}</span>
                     <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
                         [hasVariables]="false" [components]="conditional.condition.components" [variables]="variables"
                         [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center ms-auto">
                     <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clear()"><i
                             class="bi bi-trash"></i></button>
                 </div>
             </div>
         </div>
 
-        <div class="col-4 col-lg-3">
-            <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'"
-                [components]="components" [variables]="variables" (change)="setStorage()"></app-command-button>
-            <button class="btn btn-transparent" (click)="toggleHidden()"
-                [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
-                [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
-                <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
-                <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
-            </button>
+        <div class="col-12 col-lg-3 py-1">
+            <div class="d-flex justify-content-end align-items-center">
+                <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'"
+                    [components]="components" [variables]="variables" (change)="setStorage()"></app-command-button>
+                <button class="btn btn-transparent" (click)="toggleHidden()"
+                    [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
+                    [title]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)">
+                    <span *ngIf="isHidden" class="bi bi-unlock-fill" aria-hidden="true"></span>
+                    <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
+                </button>
 
-            <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()"
-                [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+                <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()"
+                    [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+            </div>
         </div>
 
-        <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-12 conditional">
+        <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-12 conditional mt-2">
             <div class="row d-flex flex-wrap zindex">
                 <div class="row" *ngFor="let component of conditional.condition.components; let i = index;">
                     <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
@@ -151,8 +153,8 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-wrap">
-                <div class="d-flex justify-content-center align-items-center">
+            <div class="d-flex flex-wrap align-items-center my-2">
+                <div class="d-flex justify-content-center align-items-center gap-1">
                     <span class="rigth" tabindex="0">{{'GENERAL.ELSE_IF' | translate }}</span>
 
                     <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
@@ -188,7 +190,5 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
