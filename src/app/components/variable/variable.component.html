@@ -1,5 +1,5 @@
-<div class="mb-2 d-flex col-12 align-items-center px-2 back" [id]="'variable-' + index">
-    <div *ngIf="!isHidden" class="col-lg-9 d-flex justify-content-start">
+<div class="mb-2 d-flex flex-wrap col-12 align-items-center px-2 py-1 back" [id]="'variable-' + index">
+    <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
         <p class="mb-0" [id]="'variable-cod-' + index" tabindex="0">
             <span *ngIf="variable.type == 'INTEGER'">{{ "VARIABLE.INT" | translate }} </span>
             <span *ngIf="variable.type == 'DOUBLE'">{{ "VARIABLE.REAL" | translate }}  </span>
@@ -12,8 +12,8 @@
         </p>
     </div>
 
-    <div *ngIf="isHidden" class="row p-2 variable-item col-lg-9">
-        <div class="col-xl-3 col-lg-3 col-md-3">
+    <div *ngIf="isHidden" class="row p-2 variable-item col-12 col-lg-9 g-2 align-items-center">
+        <div class="col-12 col-sm-6 col-md-3">
             <select [id]="'variable-type-' + index" name="tipo" class="form-control" [title]="'VARIABLE.TYPE' | translate"
                 (change)="changeType()" [(ngModel)]="variable.type">
                 <option value="INTEGER">{{ "VARIABLE.INT" | translate }}</option>
@@ -21,32 +21,25 @@
                 <option value="STRING">{{ "VARIABLE.TEXT" | translate }}</option>
                 <option value="BOOLEAN">{{ "VARIABLE.LOGIC" | translate }}</option>
             </select>
-
-            <!-- <ng-select id="variable-type-{{index}}" #ngSelect class="form-control" title="Tipo da variável" (change)="changeType()" [(ngModel)]="variable.type">
-                <ng-option [value]="'INTEGER'">inteiro</ng-option>
-                <ng-option [value]="'DOUBLE'">real</ng-option>
-                <ng-option [value]="'STRING'">texto</ng-option>
-                <ng-option [value]="'BOOLEAN'">lógico</ng-option>
-             </ng-select> -->
         </div>
 
-        <div class="col-xl-3 col-lg-3 col-md-3 col-xs-12">
+        <div class="col-12 col-sm-6 col-md-3">
             <input id="variable-name-{{index}}" type="text" class="form-control" [title]="'VARIABLE.NAME' | translate" [attr.aria-label]="'VARIABLE.NAME' | translate" [(ngModel)]="variable.name" (keyup.enter)="focusElement('variable-value-' + index)" />
         </div>
 
-        <div class="col-xl-1 col-lg-2 col-md-2 col-xs-12 d-flex align-items-center">
+        <div class="col-12 col-sm-2 col-md-2 d-flex align-items-center justify-content-start justify-content-sm-center">
             <span for="receive" tabindex="0"[title]="'GENERAL.RECEIVE' | translate">{{ "GENERAL.RECEIVE" | translate }}</span>
         </div>
 
-        <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'INTEGER' || variable.type == 'DOUBLE'">
+        <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'INTEGER' || variable.type == 'DOUBLE'">
             <input id="variable-value-{{index}}" type="number" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value">
         </div>
 
-        <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'STRING'">
+        <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'STRING'">
             <input id="variable-value-{{index}}" type="text" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value" maxlength="30">
         </div>
 
-        <div class="col-xl-3 col-lg-3 col-xs-12 col-md-3" *ngIf="variable.type == 'BOOLEAN'">
+        <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'BOOLEAN'">
             <select id="variable-value-{{index}}" name="tipo" class="form-control" [title]="'VARIABLE.TYPE' | translate" [(ngModel)]="variable.value">
                 <option [ngValue]="'verdadeiro'">{{ "GENERAL.TRUE" | translate }}</option>
                 <option [ngValue]="'falso'">{{ "GENERAL.FALSE" | translate }}</option>
@@ -54,8 +47,8 @@
         </div>
     </div>
 
-    <div class="col-lg-3">
-        <div class="d-flex justify-content-end">
+    <div class="col-12 col-lg-3 py-1">
+        <div class="d-flex justify-content-end align-items-center">
             <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'COMANDS.TITLE'" [components]="components"
             [variables]="variables" (change)="setStorage()"></app-command-button>
             <button class="btn btn-transparent" (click)="toggleHidden()" 

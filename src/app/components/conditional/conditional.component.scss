@@ -21,6 +21,12 @@ input{
     margin-right: 5px;
     margin-bottom: 5px;
 }
+
+.cond-col {
+    display: inline-flex;
+    align-items: center;
+}
+
 .more{
     margin-left: 10px;
     margin-right: 10px;
@@ -69,3 +75,12 @@ input{
         box-shadow: var(--bs-btn-focus-box-shadow);
     }
 }
+
+@media screen and (max-width: 576px) {
+    .cond-col {
+        width: 100%;
+        .form-control, .form-select {
+            width: 100%;
+        }
+    }
+}

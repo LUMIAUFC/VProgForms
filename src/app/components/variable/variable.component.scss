@@ -1,0 +1,12 @@
+.variable-item {
+    margin: 0;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .variable-item {
+        .form-control, .form-select {
+            width: 100%;
+        }
+    }
+}
