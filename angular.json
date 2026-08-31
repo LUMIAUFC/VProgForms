@@ -37,6 +37,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/VProgForms/",
               "budgets": [
                 {
                   "type": "initial",
