@@ -246,33 +246,6 @@ export class AppComponent {
 
     let programSintax = currentLang == 'pt' ? programSintaxPt : programSintaxEn;
 
-    // Exemplo de uso
-    // programSintax = `programa {
-    //   funcao inicio () {
-    //     inteiro a <- 0
-    //     para a de 0 ate 10 {
-    //       se (a%2 == 0) {
-    //         escreva("eh par: "+a)
-    //       }
-    //     }
-    //   }
-    // }
-    // `;
-
-    // programSintax = `programa {
-    //   funcao inicio () {
-    //     inteiro a <- 0
-    //     inteiro b <- 1
-    //     inteiro c <- 2
-
-    //     a <- b + c
-    //     escreva("aqui: " + a)
-    //   }
-    // }
-    // `;
-
-    console.log(programSintax);
-
     this.isRunning = true;
 
     let executionOutput = "";
@@ -295,7 +268,6 @@ export class AppComponent {
       // Ela devolve o estado final do programa (valores finais das variáveis declaradas dentro da função "inicio" ou no escopo global)
       // A classe Store em src/processor/store/store.ts descreve o parametro mas no contexto atual ele é totalmente irrelevante
       proc.interpretAST().then((_finalProgramState: any) => {
-        console.log("Programa executado com sucesso!");
         this.registrarExecucaoLog(programSintax, executionOutput);
       }).catch((err: any) => {
         executionOutput += "Erro de execução: " + err + "\n";
@@ -370,7 +342,7 @@ export class AppComponent {
 
     this.isMonitoring = true;
     this.isRecordingLog = true;
-    
+
     setTimeout(() => { document.getElementById('log-recording-message')?.focus(); }, 100);
 
     const id = await this.logService.adicionarLog({
