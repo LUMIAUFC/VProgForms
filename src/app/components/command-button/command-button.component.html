@@ -7,14 +7,26 @@
         <span class="color-black" *ngIf="text2 == true" tabindex="-1">{{ "COMANDS.TITLE2" | translate }}</span>
     </button>
     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button class="dropdown-item" tabindex="0" *ngIf="hasVariables" (click)="addVariable()" aria-keyshortcuts="Alt+1">{{
-            "COMANDS.BUTTON.NEW_VARIABLE" | translate }}</button>
-        <button class="dropdown-item" tabindex="0" (click)="addOperator()" aria-keyshortcuts="Alt+2">{{ "COMANDS.BUTTON.MATH" | translate
-            }}</button>
-        <button class="dropdown-item" tabindex="0" (click)="addWriter()" aria-keyshortcuts="Alt+3">{{ "COMANDS.BUTTON.WRITE" | translate }}
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" *ngIf="hasVariables" (click)="addVariable()"
+            aria-keyshortcuts="Alt+1">
+            <span>{{ "COMANDS.BUTTON.NEW_VARIABLE" | translate }}</span>
+            <kbd class="key-shortcut">Alt+1</kbd>
         </button>
-        <button class="dropdown-item" tabindex="0" (click)="addConditional()" aria-keyshortcuts="Alt+4">{{ "COMANDS.BUTTON.IF" | translate
-            }}</button>
-        <button class="dropdown-item" tabindex="0" (click)="addFor()" aria-keyshortcuts="Alt+5">{{ "COMANDS.BUTTON.WHILE" | translate }}</button>
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addOperator()" aria-keyshortcuts="Alt+2">
+            <span>{{ "COMANDS.BUTTON.MATH" | translate }}</span>
+            <kbd class="key-shortcut">Alt+2</kbd>
+        </button>
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addWriter()" aria-keyshortcuts="Alt+3">
+            <span>{{ "COMANDS.BUTTON.WRITE" | translate }}</span>
+            <kbd class="key-shortcut">Alt+3</kbd>
+        </button>
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addConditional()" aria-keyshortcuts="Alt+4">
+            <span>{{ "COMANDS.BUTTON.IF" | translate }}</span>
+            <kbd class="key-shortcut">Alt+4</kbd>
+        </button>
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addFor()" aria-keyshortcuts="Alt+5">
+            <span>{{ "COMANDS.BUTTON.WHILE" | translate }}</span>
+            <kbd class="key-shortcut">Alt+5</kbd>
+        </button>
     </div>
 </div>
