@@ -1,30 +1,34 @@
 <div ngbDropdown class="d-inline-block {{ mode }}">
-    <button id="btn-dropdown-comandos" type="button" class="dropdown btn btn-primary p-3" ngbDropdownToggle
-        [title]="title | translate">
+    <button id="btn-dropdown-comandos" type="button" class="dropdown btn btn-primary p-3" id="dropdownBasic1"
+        ngbDropdownToggle [title]="title | translate">
         <span *ngIf="text == true && text2==false">{{ "COMANDS.TITLE" | translate }}</span>
         <span *ngIf="text == false && iconComands ==true" class="bi bi-code-slash"></span>
         <span *ngIf="text == false && iconComands == false" class="bi bi-code-slash"></span>
         <span class="color-black" *ngIf="text2 == true" tabindex="-1">{{ "COMANDS.TITLE2" | translate }}</span>
     </button>
     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" *ngIf="hasVariables" (click)="addVariable()"
-            aria-keyshortcuts="Alt+1">
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0"
+            *ngIf="hasVariables" (click)="addVariable()" aria-keyshortcuts="Alt+1">
             <span>{{ "COMANDS.BUTTON.NEW_VARIABLE" | translate }}</span>
             <kbd class="key-shortcut">Alt+1</kbd>
         </button>
-        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addOperator()" aria-keyshortcuts="Alt+2">
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0"
+            (click)="addOperator()" aria-keyshortcuts="Alt+2">
             <span>{{ "COMANDS.BUTTON.MATH" | translate }}</span>
             <kbd class="key-shortcut">Alt+2</kbd>
         </button>
-        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addWriter()" aria-keyshortcuts="Alt+3">
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0"
+            (click)="addWriter()" aria-keyshortcuts="Alt+3">
             <span>{{ "COMANDS.BUTTON.WRITE" | translate }}</span>
             <kbd class="key-shortcut">Alt+3</kbd>
         </button>
-        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addConditional()" aria-keyshortcuts="Alt+4">
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0"
+            (click)="addConditional()" aria-keyshortcuts="Alt+4">
             <span>{{ "COMANDS.BUTTON.IF" | translate }}</span>
             <kbd class="key-shortcut">Alt+4</kbd>
         </button>
-        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0" (click)="addFor()" aria-keyshortcuts="Alt+5">
+        <button class="dropdown-item d-flex align-items-center justify-content-between gap-3" tabindex="0"
+            (click)="addFor()" aria-keyshortcuts="Alt+5">
             <span>{{ "COMANDS.BUTTON.WHILE" | translate }}</span>
             <kbd class="key-shortcut">Alt+5</kbd>
         </button>
