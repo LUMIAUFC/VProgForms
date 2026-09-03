@@ -1,7 +1,7 @@
 {
   "GENERAL": {
     "IVPROG": "iVProg Acessível",
-    "TITLE": "Área de Comandos",
+    "TITLE": "VProgForms",
     "RECEIVE": "recebe",
     "READ_CODE": "Ler código",
     "READ_EDIT": "Editar código",
@@ -139,6 +139,7 @@
     "TOGGLE_NAVIGATION": "Alternar navegação",
     "LOGO_IVPROG": "Logo iVProg Forms",
     "LOGO_LUMIA": "Logo Lumia",
+    "LOGO_UFC": "Logo da Universidade Federal do Ceará",
     "SELECT_LANGUAGE": "Selecionar idioma"
   }
 }

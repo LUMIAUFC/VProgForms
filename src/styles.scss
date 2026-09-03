@@ -41,6 +41,32 @@
     box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%);
 }
 
+.btn-danger {
+    background-color: #b02a37;
+    border-color: #a52834;
+    color: #ffffff;
+
+    &:hover,
+    &:focus {
+        background-color: #8c1c27;
+        border-color: #821a24;
+        color: #ffffff;
+    }
+}
+
+.btn-success {
+    background-color: #13653f;
+    border-color: #105635;
+    color: #ffffff;
+
+    &:hover,
+    &:focus {
+        background-color: #0d4a2d;
+        border-color: #0b3f27;
+        color: #ffffff;
+    }
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

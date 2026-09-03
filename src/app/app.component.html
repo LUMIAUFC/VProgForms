@@ -45,7 +45,8 @@
         <div class="d-flex ms-auto align-items-center gap-2 gap-md-3">
           <div ngbDropdown class="d-inline-block">
             <button class="btn btn-outline-light d-flex align-items-center gap-2" id="dropdownLanguage"
-              ngbDropdownToggle [attr.aria-label]="'ACCESSIBILITY.SELECT_LANGUAGE' | translate"
+              ngbDropdownToggle
+              [attr.aria-label]="(currentLanguage | uppercase) + ' - ' + ('ACCESSIBILITY.SELECT_LANGUAGE' | translate)"
               [title]="'ACCESSIBILITY.SELECT_LANGUAGE' | translate">
               <i class="bi bi-globe" aria-hidden="true"></i>
               <span>{{ currentLanguage | uppercase }}</span>
@@ -72,7 +73,7 @@
           <div class="col-12 area-comandos-wrapper">
             <fieldset>
               <legend class="p-1">
-                <h2 id="inicio"><strong> {{ "GENERAL.TITLE" | translate }}</strong></h2>
+                <h1 id="inicio" class="text-center"><strong> {{ "GENERAL.TITLE" | translate }}</strong></h1>
               </legend>
 
               <div class="col-12 pt-1 pb-4 px-4" style="text-align: right;">
