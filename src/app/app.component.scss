@@ -180,4 +180,49 @@ footer {
     padding-right: .25rem;
     padding-left: .25rem;
   }
+
+  #botoes {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    gap: 0.875rem !important;
+
+    >button,
+    >app-command-button {
+      width: calc(100% * 4 / 5) !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    >button {
+      padding: 0.875rem 1.5rem !important;
+      font-size: 1rem;
+      gap: 0.5rem;
+    }
+
+    ::ng-deep app-command-button {
+      width: calc(100% * 4 / 5) !important;
+      display: flex;
+      justify-content: center;
+
+      .d-inline-block {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      #btn-dropdown-comandos {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.875rem 1.5rem !important;
+        font-size: 1rem;
+      }
+    }
+  }
 }

@@ -33,3 +33,32 @@
     padding: 2px 6px;
     line-height: 1;
 }
+
+:host-context(#botoes) {
+    @media screen and (max-width: 768px) {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+
+        .d-inline-block {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        #btn-dropdown-comandos {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.875rem 1.5rem !important;
+            font-size: 1rem;
+        }
+
+        .dropdown-toggle {
+            width: 100%;
+        }
+    }
+}
