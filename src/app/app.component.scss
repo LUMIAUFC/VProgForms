@@ -72,8 +72,9 @@ h2 {
 }
 
 .area-terminal-comandos-comandos {
-  height: 25vh;
-  overflow-y: auto;
+  min-height: 120px;
+  height: auto;
+  overflow-y: visible;
   padding-right: 1.5rem;
   padding-left: 1.5rem;
 }
@@ -174,9 +175,10 @@ footer {
   }
 
   .area-terminal-comandos-comandos {
-    height: 100%;
-    min-height: 156px;
-    max-height: 396px;
+    height: auto;
+    min-height: 120px;
+    max-height: none;
+    overflow-y: visible;
     padding-right: .25rem;
     padding-left: .25rem;
   }
