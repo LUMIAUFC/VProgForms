@@ -14,17 +14,18 @@
     },
     "MENU": {
       "START": "Go to Commands Area",
-      "ALT_I": "ALT + I Go to Commands Area",
+      "ALT_I": "ALT + I, Go to Commands Area",
       "MONITORING": "Go to monitoring",
-      "ALT_G": "ALT + G Go to monitoring",
+      "ALT_G": "ALT + G, Go to monitoring",
       "COMANDS": "Go to command list",
-      "ALT_C": "ALT + C Go to command list",
+      "ALT_C": "ALT + C, Go to command list",
       "PROGRAM": "Run program",
-      "ALT_E": "ALT+E Run program",
+      "ALT_E": "ALT + E, Run program",
       "MONITOR": "Record Activity",
       "MONITOR_OFF": "Stop Recording",
-      "ALT_M": "ALT + M Record Activity",
-      "ALT_M_OFF": "ALT + M Stop Recording"
+      "ALT_M": "ALT + M, Record Activity",
+      "ALT_M_OFF": "ALT + M, Stop Recording",
+      "ALT_X": "ALT + X, Delete commands"
     },
     "BUTTON": {
       "RUN": "Execute",
@@ -48,6 +49,8 @@
     "VALUE_OF": "Value of",
     "INCREMENT": "Increment",
     "DECREMENT": "Decrement",
+    "STEP_INCREMENT": "Step +",
+    "STEP_DECREMENT": "Step -",
     "STEP_VALUE": "Step numeric value",
     "SELECT_OPERATOR": "Select the operation",
     "ADD": "To add",
@@ -92,6 +95,9 @@
   "COMANDS": {
     "TITLE": "Commands",
     "TITLE2": "Do",
+    "ADD_IN_THEN": "Add command in Then block",
+    "ADD_IN_ELSE": "Add command in Else block",
+    "ADD_IN_FOR": "Add command in Repeat loop",
     "BUTTON": {
       "NEW_VARIABLE": "New Variable",
       "MATH": "Assignment/Math",
@@ -113,7 +119,8 @@
   },
   "TERMINAL": {
     "START": "Start of execution...",
-    "FINISH": "End of execution..."
+    "FINISH": "End of execution...",
+    "RECORDING_BADGE": "Recording activity"
   },
   "CONSENT_MODAL": {
     "TITLE": "Monitoring Consent Notice",
@@ -140,6 +147,45 @@
     "LOGO_IVPROG": "iVProg Forms Logo",
     "LOGO_LUMIA": "Lumia Logo",
     "LOGO_UFC": "Federal University of Ceará Logo",
-    "SELECT_LANGUAGE": "Select language"
+    "SELECT_LANGUAGE": "Select language",
+    "DELETE_VARIABLE": "Delete variable {{name}}",
+    "DELETE_VARIABLE_UNNAMED": "Delete variable",
+    "DELETE_OPERATOR": "Delete assignment for variable {{name}}",
+    "DELETE_OPERATOR_UNNAMED": "Delete assignment block",
+    "REMOVE_EXPRESSION_TERM": "Remove term {{term}} from expression",
+    "REMOVE_EMPTY_TERM": "Remove empty term from expression",
+    "DELETE_WRITE": "Delete Write command {{target}}",
+    "DELETE_WRITE_UNNAMED": "Delete Write command",
+    "DELETE_CONDITIONAL": "Delete If…Then block",
+    "DELETE_CONDITIONAL_WITH_EXPR": "Delete If block ({{condition}})",
+    "CLEAR_CONDITION": "Clear entire If condition",
+    "REMOVE_CONDITION_TERM": "Remove term {{term}} from condition",
+    "REMOVE_EMPTY_CONDITION_TERM": "Remove empty term from condition",
+    "DELETE_FOR": "Delete Repeat_For block for variable {{name}}",
+    "DELETE_FOR_UNNAMED": "Delete Repeat_For block",
+    "MOVE_COMMAND_UP": "Move {{label}} up",
+    "MOVE_COMMAND_DOWN": "Move {{label}} down",
+    "MOVE_TERM_UP": "Move term {{term}} up",
+    "MOVE_TERM_DOWN": "Move term {{term}} down",
+    "MOVE_EMPTY_TERM_UP": "Move empty term up",
+    "MOVE_EMPTY_TERM_DOWN": "Move empty term down"
+  },
+  "VALIDATION": {
+    "VARIABLE_NAME_EMPTY": "There is a variable without a name. Please fill in the variable name before running.",
+    "VARIABLE_NAME_INVALID": "The variable name \"{{name}}\" cannot contain spaces. Please fix it before running.",
+    "VARIABLE_VALUE_EMPTY": "The variable \"{{name}}\" has no initial value. Please provide a value before running.",
+    "VARIABLE_NOT_IN_SCOPE": "The variable \"{{name}}\" used in a command does not exist or is declared after this command. Check the block order or reselect the variable.",
+    "OPERATOR_TARGET_EMPTY": "There is an Assignment/Math block without a target variable selected.",
+    "OPERATOR_EXPRESSION_INCOMPLETE": "The assignment for \"{{name}}\" has an incomplete expression. Please fill in all terms before running.",
+    "WRITER_INCOMPLETE": "There is an incomplete Write command. Select the type and content before running.",
+    "CONDITIONAL_INCOMPLETE": "There is an If…Then structure with an incomplete condition. Check the blocks before running.",
+    "FOR_INCOMPLETE": "There is a Repeat_For loop with incomplete fields. Fill in variable, start, end, and step before running.",
+    "FOR_INVALID_STEP": "In the Repeat_For loop for variable \"{{name}}\", the step value must be a number greater than zero.",
+    "FOR_INVALID_DIRECTION": "In the Repeat_For loop for variable \"{{name}}\", the step direction ({{direction}}) is incompatible with start ({{start}}) and end ({{finish}}) values."
+  },
+  "EXECUTION_ERROR": {
+    "INTERNAL_SYNTAX": "Could not run the program because there is a block with an incomplete expression or command. Please review the filled fields.",
+    "INFINITE_LOOP": "Execution stopped because the program exceeded the instruction limit (possible infinite loop). Check the loop bounds and step.",
+    "GENERIC": "Error running the program. Verify that all variables and expressions are filled in correctly."
   }
 }

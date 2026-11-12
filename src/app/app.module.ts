@@ -18,6 +18,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AccessibleMathPipe } from './pipes/accessible-math.pipe';
+import { BlockReorderComponent } from './components/block-reorder/block-reorder.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -33,7 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommandButtonComponent,
     ConditionalComponent,
     ForComponent,
-    AccessibleMathPipe
+    AccessibleMathPipe,
+    BlockReorderComponent
   ],
   imports: [
     BrowserModule,

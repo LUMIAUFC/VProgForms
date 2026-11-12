@@ -5,6 +5,15 @@ import { LogExportService } from './features/logs/services/log-export.service';
 import { Log } from './features/logs/models/log.model';
 import { TypesEnum } from './enums/types.enum';
 import { Execucao } from './features/logs/models/execucao.model';
+import { mapVcatError, validateProgram } from './utils/program-validator';
+import { focusFirstDropdownItem } from './utils/dropdown-focus.utils';
+import {
+  getVariablesBeforeIndex,
+  moveItemDown,
+  moveItemUp,
+  normalizeNumericFallback,
+  renameVariableInComponents
+} from './utils/reorder.utils';
 declare var vcat: any;
 
 @Component({
@@ -15,7 +24,6 @@ declare var vcat: any;
 export class AppComponent {
   title = 'ivprog';
   isMenuCollapsed = true;
-  private pressedAlt: boolean = false;
   components: Array<any> = [];
   isRunning: boolean = false;
   isMonitoring: boolean = false;
@@ -30,6 +38,12 @@ export class AppComponent {
 
   constructor(public translate: TranslateService, private logService: LogService, private logExportService: LogExportService) {
 
+  }
+
+  onLanguageDropdownOpenChange(isOpen: boolean): void {
+    if (isOpen) {
+      focusFirstDropdownItem('dropdownLanguage');
+    }
   }
 
   ngOnInit(): void {
@@ -63,6 +77,10 @@ export class AppComponent {
 
   getVariables() {
     return this.components ? this.components.filter(c => c.type == TypesEnum.VARIABLE) : [];
+  }
+
+  getVariablesBefore(index: number) {
+    return getVariablesBeforeIndex(this.components, index);
   }
 
   getWriters() {
@@ -106,6 +124,21 @@ export class AppComponent {
     this.setStorage();
   }
 
+  moveComponentUp(index: number) {
+    this.components = moveItemUp(this.components, index);
+    this.setStorage();
+  }
+
+  moveComponentDown(index: number) {
+    this.components = moveItemDown(this.components, index);
+    this.setStorage();
+  }
+
+  renameVariableReferences(event: { oldName: string; newName: string }) {
+    this.components = renameVariableInComponents(this.components, event.oldName, event.newName);
+    this.setStorage();
+  }
+
   clear() {
     this.components = [];
     this.setStorage();
@@ -134,27 +167,7 @@ export class AppComponent {
   }
 
   validateComponents(components: any[]): boolean {
-    if (!components) return true;
-    for (const c of components) {
-      if (c.type === TypesEnum.CONDITIONAL) {
-        if (!c.value || !c.value.conditionals || c.value.conditionals.length === 0) {
-          return false;
-        }
-        for (const op of c.value.conditionals) {
-          if (!op.type || op.value === '') {
-            return false;
-          }
-        }
-        if (!this.validateComponents(c.value.condition?.components) || !this.validateComponents(c.value.nocondition?.components)) {
-          return false;
-        }
-      } else if (c.type === TypesEnum.FOR_CODITIONAL) {
-        if (!this.validateComponents(c.value.components)) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return validateProgram(components).valid;
   }
 
   runCommands(components: any) {
@@ -166,10 +179,10 @@ export class AppComponent {
     components.filter((c: any) => c.type == TypesEnum.VARIABLE).forEach((c: any) => {
       switch (c.value.type) {
         case "INTEGER":
-          programComands += `${currentLang == 'pt' ? 'inteiro' : 'int'} ${c.value.name} <- ${c.value.value} \n`;
+          programComands += `${currentLang == 'pt' ? 'inteiro' : 'int'} ${c.value.name} <- ${normalizeNumericFallback(c.value.value)} \n`;
           break;
         case "DOUBLE":
-          programComands += `${currentLang == 'pt' ? 'real' : 'real'} ${c.value.name} <- ${c.value.value} \n`;
+          programComands += `${currentLang == 'pt' ? 'real' : 'real'} ${c.value.name} <- ${normalizeNumericFallback(c.value.value)} \n`;
           break;
         case "BOOLEAN":
           programComands += `${currentLang == 'pt' ? 'logico' : 'bool'} ${c.value.name} <- ${c.value.value} \n`;
@@ -216,35 +229,39 @@ export class AppComponent {
 
   run() {
     this.executionAlertMessage = '';
-    const isValid = this.validateComponents(this.components);
-    if (!isValid) {
-      const msg = this.translate.currentLang === 'en' ? "Incomplete conditional structure. Please check the blocks before running." : "Estrutura de decisão incompleta. Verifique os blocos antes de executar.";
+    this.isDownloadReady = false;
+    this.downloadableLog = null;
+    const validation = validateProgram(this.components);
+    if (!validation.valid && validation.messageKey) {
+      const msg = this.translate.instant(validation.messageKey, validation.params);
       this.executionAlertMessage = msg;
+      this.isRunning = true;
+      this.clearTerminal();
+      this.terminalOutput(msg, false);
       setTimeout(() => {
-        const alertElement = document.getElementById("execution-alert");
-        if (alertElement) alertElement.focus();
+        document.getElementById('execution-alert')?.focus();
       }, 100);
       return;
     }
 
     const currentLang = "pt";
-    let programComands = this.runCommands(this.components);
+    const programComands = this.runCommands(this.components);
 
-    let programSintaxPt = `
+    const programSintaxPt = `
     programa { 
       funcao vazio inicio () { 
         ${programComands}
       } 
     }`;
 
-    let programSintaxEn = `
+    const programSintaxEn = `
     program { 
       function void main () { 
         ${programComands}
       } 
     }`;
 
-    let programSintax = currentLang == 'pt' ? programSintaxPt : programSintaxEn;
+    const programSintax = currentLang == 'pt' ? programSintaxPt : programSintaxEn;
 
     this.isRunning = true;
 
@@ -270,7 +287,11 @@ export class AppComponent {
       proc.interpretAST().then((_finalProgramState: any) => {
         this.registrarExecucaoLog(programSintax, executionOutput);
       }).catch((err: any) => {
-        executionOutput += "Erro de execução: " + err + "\n";
+        console.error(err);
+        const friendlyMessage = this.resolveVcatErrorMessage(err);
+        this.executionAlertMessage = friendlyMessage;
+        executionOutput += friendlyMessage + "\n";
+        this.terminalOutput(friendlyMessage);
         this.registrarExecucaoLog(programSintax, executionOutput);
       });
     } catch (error: any) {
@@ -281,30 +302,39 @@ export class AppComponent {
       // Vê: src/ast/error/syntaxError.js, src/processor/error/runtimeError.js, src/processor/error/semanticError.js e seus respectivos factories
       // NOTA: Em alguns casos a informação de linha e coluna podem nao estar disponivel
       // id representa o identificador unico do erro, linha e coluna onde no codigo textual ocorreu o problema
-      if (error.id && error.context)
+      if (error?.id && error?.context)
         console.error(error.id, error.context.line, error.context.column);
       else
-        console.error(error)
+        console.error(error);
 
-      executionOutput += error.message + "\n";
-      this.terminalOutput(error.message);
+      const friendlyMessage = this.resolveVcatErrorMessage(error);
+      this.executionAlertMessage = friendlyMessage;
+      executionOutput += friendlyMessage + "\n";
+      this.terminalOutput(friendlyMessage);
       this.registrarExecucaoLog(programSintax, executionOutput);
       // a linha e coluna foi a estrategia pensada para poder associar o erro com o elemento visual que o gerou
       // uma vez que seria possivel associar seções do texto com o elemento que o gerou
     }
   }
 
-  terminalOutput(valor: any) {
+  private resolveVcatErrorMessage(error: unknown): string {
+    const mapped = mapVcatError(error);
+    return mapped.rawMessage ?? this.translate.instant(mapped.messageKey);
+  }
+
+  terminalOutput(valor: any, shouldFocus: boolean = true) {
     setTimeout(() => {
-      let terminalElement = document.getElementById("terminalOutput");
-      let textTerminal = document.getElementById("textTerminal");
+      const terminalElement = document.getElementById("terminalOutput");
+      const textTerminal = document.getElementById("textTerminal");
 
       if (terminalElement && textTerminal) {
-        let terminalContent = terminalElement.innerHTML;
-        let stringValue = (valor === 0 || valor === '0') ? '0 ' : String(valor);
-        terminalContent += `<p>${stringValue}</p>`;
-        terminalElement.innerHTML = terminalContent;
-        textTerminal.focus();
+        const stringValue = (valor === 0 || valor === '0') ? '0 ' : String(valor);
+        const paragraph = document.createElement('p');
+        paragraph.textContent = stringValue;
+        terminalElement.appendChild(paragraph);
+        if (shouldFocus) {
+          textTerminal.focus();
+        }
       }
     }, 200);
   }
@@ -334,12 +364,15 @@ export class AppComponent {
   async startMonitoring() {
     const hasConsent = localStorage.getItem('consentimento_coleta');
     if (hasConsent !== 'true') {
-      this.clear(); // Limpar terminal histórico anterior (opcionalmente apenas clear, já limpa e zera os logs)
+      this.clearTerminal();
       this.showConsentModal = true;
       setTimeout(() => { document.getElementById('title-terminal')?.focus(); }, 100);
       return;
     }
 
+    this.isRunning = false;
+    this.isDownloadReady = false;
+    this.downloadableLog = null;
     this.isMonitoring = true;
     this.isRecordingLog = true;
 
@@ -379,9 +412,6 @@ export class AppComponent {
     if (this.downloadableLog) {
       this.logExportService.exportLogTxt(this.downloadableLog);
     }
-    this.isDownloadReady = false;
-    this.downloadableLog = null;
-    setTimeout(() => { document.getElementById('title-terminal')?.focus(); }, 100);
   }
 
   async handleMonitoring() {
@@ -404,7 +434,7 @@ export class AppComponent {
   };
 
   goToComands() {
-    document.getElementById('comands')?.focus();
+    document.getElementById('btn-dropdown-comandos')?.focus();
   }
 
   goToStart() {
@@ -420,24 +450,23 @@ export class AppComponent {
   }
 
   @HostListener("window:keydown", ["$event"]) onKeyDown(event: KeyboardEvent) {
-    if (event.altKey && event.code == "KeyI") {
-      this.goToStart();
-      this.pressedAlt = false;
+    if (!event.altKey) {
+      return;
     }
 
-    if (event.altKey && event.code == "KeyC") {
-      this.goToComands();
-      this.pressedAlt = false;
-    }
+    const shortcutHandlers: Record<string, () => void> = {
+      KeyI: () => this.goToStart(),
+      KeyC: () => this.goToComands(),
+      KeyG: () => this.goToGravarAtividade(),
+      KeyM: () => { void this.handleMonitoring(); },
+      KeyE: () => this.goToExecut(),
+      KeyX: () => this.clear()
+    };
 
-    if (event.altKey && event.code == "KeyG") {
-      this.goToGravarAtividade();
-      this.pressedAlt = false;
-    }
-
-    if (event.altKey && event.code == "KeyE") {
-      this.goToExecut();
-      this.pressedAlt = false;
+    const handler = shortcutHandlers[event.code];
+    if (handler) {
+      event.preventDefault();
+      handler();
     }
   }
 }

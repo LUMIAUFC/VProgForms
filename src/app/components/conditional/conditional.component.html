@@ -15,9 +15,9 @@
                         }}</span>
                 </div>
 
-                <div class="d-flex flex-wrap align-items-center gap-2" *ngFor="let op of conditional.conditionals">
+                <div class="d-flex flex-wrap align-items-center gap-2" *ngFor="let op of conditional.conditionals; let i = index">
                     <div class="cond-col">
-                        <select class="form-select" id="conditional-op-{{index}}-{{op.index}}"
+                        <select class="form-select" id="conditional-type-{{index}}-{{op.index}}"
                             *ngIf="op.type != 'CONDITIONAL'" [(ngModel)]="op.type" (change)="clearValue(op)"
                             [title]="'GENERAL.SELECT_DATA_TYPE' | translate"
                             [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
@@ -78,6 +78,15 @@
                             </optgroup>
                         </select>
                     </div>
+
+                    <div class="cond-col" *ngIf="op.type != 'CONDITIONAL' && conditional.conditionals.length > 1">
+                        <button class="btn btn-sm btn-outline-danger" type="button"
+                            [attr.aria-label]="op?.value ? ('ACCESSIBILITY.REMOVE_CONDITION_TERM' | translate:{ term: op.value }) : ('ACCESSIBILITY.REMOVE_EMPTY_CONDITION_TERM' | translate)"
+                            [title]="op?.value ? ('ACCESSIBILITY.REMOVE_CONDITION_TERM' | translate:{ term: op.value }) : ('ACCESSIBILITY.REMOVE_EMPTY_CONDITION_TERM' | translate)"
+                            (click)="removeConditionTerm(i)">
+                            <i class="bi bi-x" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center position-relative">
@@ -97,20 +106,26 @@
 
                 <div class="d-flex align-items-center gap-1 ms-2">
                     <span tabindex="0">{{'GENERAL.ELSE' | translate }}</span>
-                    <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
+                    <app-command-button [mode]="'inline'" [variant]="'add-block'" [title]="'COMANDS.ADD_IN_THEN'"
                         [hasVariables]="false" [components]="conditional.condition.components" [variables]="variables"
                         [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center ms-auto">
-                    <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clear()"><i
-                            class="bi bi-trash"></i></button>
+                    <button class="trash" type="button"
+                        [attr.aria-label]="'ACCESSIBILITY.CLEAR_CONDITION' | translate"
+                        [title]="'ACCESSIBILITY.CLEAR_CONDITION' | translate"
+                        (click)="clear()"><i class="bi bi-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-lg-3 py-1">
             <div class="d-flex justify-content-end align-items-center">
+                <app-block-reorder [index]="index" [total]="components.length"
+                    [contextLabel]="'COMANDS.BUTTON.IF' | translate"
+                    (moveUp)="moveUp.emit($event)" (moveDown)="moveDown.emit($event)">
+                </app-block-reorder>
                 <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'"
                     [components]="components" [variables]="variables" (change)="setStorage()"></app-command-button>
                 <button class="btn btn-transparent" (click)="toggleHidden()"
@@ -121,7 +136,8 @@
                 </button>
 
                 <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()"
-                    [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+                    [attr.aria-label]="conditional?.condition?.value?.trim() ? ('ACCESSIBILITY.DELETE_CONDITIONAL_WITH_EXPR' | translate:{ condition: conditional.condition.value.trim() }) : ('ACCESSIBILITY.DELETE_CONDITIONAL' | translate)"
+                    [title]="conditional?.condition?.value?.trim() ? ('ACCESSIBILITY.DELETE_CONDITIONAL_WITH_EXPR' | translate:{ condition: conditional.condition.value.trim() }) : ('ACCESSIBILITY.DELETE_CONDITIONAL' | translate)"><span aria-hidden="true">X</span></button>
             </div>
         </div>
 
@@ -131,24 +147,33 @@
                     <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [writer]="component.value" [components]="conditional.condition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('condition', $event)"
+                        (moveDown)="moveNestedComponentDown('condition', $event)"
                         (change)="setStorage()">
                     </app-write>
 
                     <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [operator]="component.value" [components]="conditional.condition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('condition', $event)"
+                        (moveDown)="moveNestedComponentDown('condition', $event)"
                         (change)="setStorage()">
                     </app-operator>
 
                     <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [conditional]="component.value" [components]="conditional.condition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('condition', $event)"
+                        (moveDown)="moveNestedComponentDown('condition', $event)"
                         (change)="setStorage()">
                     </app-conditional>
 
                     <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
                         [components]="conditional.condition.components" [variables]="variables"
-                        (remove)="removeComponent(conditional.condition.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(conditional.condition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('condition', $event)"
+                        (moveDown)="moveNestedComponentDown('condition', $event)"
+                        (change)="setStorage()">
                     </app-for>
                 </div>
             </div>
@@ -157,7 +182,7 @@
                 <div class="d-flex justify-content-center align-items-center gap-1">
                     <span class="rigth" tabindex="0">{{'GENERAL.ELSE_IF' | translate }}</span>
 
-                    <app-command-button [mode]="'inline'" [title]="'Adicionar comandos na condição'"
+                    <app-command-button [mode]="'inline'" [variant]="'add-block'" [title]="'COMANDS.ADD_IN_ELSE'"
                         [hasVariables]="false" [components]="conditional.nocondition.components" [variables]="variables"
                         [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
                 </div>
@@ -168,24 +193,33 @@
                     <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [writer]="component.value" [components]="conditional.nocondition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
                         (change)="setStorage()">
                     </app-write>
 
                     <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [operator]="component.value" [components]="conditional.nocondition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
                         (change)="setStorage()">
                     </app-operator>
 
                     <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [conditional]="component.value" [components]="conditional.nocondition.components"
                         [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
                         (change)="setStorage()">
                     </app-conditional>
 
                     <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
                         [components]="conditional.nocondition.components" [variables]="variables"
-                        (remove)="removeComponent(conditional.nocondition.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(conditional.nocondition.components, $event)"
+                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
+                        (change)="setStorage()">
                     </app-for>
                 </div>
             </div>

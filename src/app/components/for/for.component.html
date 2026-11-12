@@ -34,7 +34,7 @@
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
                         </select>
 
-                        <input id="for-start-value-{{index}}" class="form-control" *ngIf="for.startType == 'VALUE'" [(ngModel)]="for.startValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
+                        <input id="for-start-value-{{index}}" class="form-control" *ngIf="for.startType == 'VALUE'" [(ngModel)]="for.startValue" (focus)="$any($event.target).select()" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
                         </select>
 
-                        <input id="for-finish-value-{{index}}" class="form-control" *ngIf="for.finishType == 'VALUE'" [(ngModel)]="for.finishValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
+                        <input id="for-finish-value-{{index}}" class="form-control" *ngIf="for.finishType == 'VALUE'" [(ngModel)]="for.finishValue" (focus)="$any($event.target).select()" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
                     </div>
                 </div>
 
@@ -63,17 +63,18 @@
                     <div class="d-flex flex-wrap align-items-center justify-content-start gap-1">
                         <select id="for-increment-type-{{index}}" class="form-select" [(ngModel)]="for.incrementType" (change)="setStorage()" [title]="'GENERAL.SELECT_OPERATOR' | translate" [attr.aria-label]="'GENERAL.SELECT_OPERATOR' | translate">
                             <option [ngValue]="''" disabled>{{ "GENERAL.SELECT" | translate }}</option>
-                            <option [ngValue]="'+'" [attr.aria-label]="'GENERAL.INCREMENT' | translate" [title]="'GENERAL.INCREMENT' | translate">++</option>
-                            <option [ngValue]="'-'" [attr.aria-label]="'GENERAL.DECREMENT' | translate" [title]="'GENERAL.DECREMENT' | translate">&minus;&minus;</option>
+                            <option [ngValue]="'+'" [attr.aria-label]="'GENERAL.INCREMENT' | translate" [title]="'GENERAL.INCREMENT' | translate">{{ "GENERAL.STEP_INCREMENT" | translate }}</option>
+                            <option [ngValue]="'-'" [attr.aria-label]="'GENERAL.DECREMENT' | translate" [title]="'GENERAL.DECREMENT' | translate">{{ "GENERAL.STEP_DECREMENT" | translate }}</option>
                         </select>
-                        <input id="for-increment-value-{{index}}" class="form-control" [(ngModel)]="for.incrementValue" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.STEP_VALUE' | translate" [attr.aria-label]="'GENERAL.STEP_VALUE' | translate" />
+                        <input id="for-increment-value-{{index}}" class="form-control" [(ngModel)]="for.incrementValue" (focus)="$any($event.target).select()" (change)="setStorage()" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" [title]="'GENERAL.STEP_VALUE' | translate" [attr.aria-label]="'GENERAL.STEP_VALUE' | translate" />
                     </div>
                 </div>
 
                 <div class="col-12 col-md-2 col-lg-1 d-flex justify-content-start justify-content-md-center align-items-center">
                     <app-command-button 
                         [mode]="'inline'" 
-                        [title]="'Adicionar comandos à repetição'" 
+                        [variant]="'add-block'"
+                        [title]="'COMANDS.ADD_IN_FOR'" 
                         [hasVariables]="false" 
                         [components]="for.components" 
                         [variables]="variables" 
@@ -87,22 +88,30 @@
                 <div class="row" *ngFor="let component of for.components; let i = index;">
                     <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [writer]="component.value" [components]="for.components" [variables]="variables"
-                        (remove)="removeComponent(for.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(for.components, $event)"
+                        (moveUp)="moveNestedComponentUp($event)" (moveDown)="moveNestedComponentDown($event)"
+                        (change)="setStorage()">
                     </app-write>
 
                     <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [operator]="component.value" [components]="for.components" [variables]="variables"
-                        (remove)="removeComponent(for.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(for.components, $event)"
+                        (moveUp)="moveNestedComponentUp($event)" (moveDown)="moveNestedComponentDown($event)"
+                        (change)="setStorage()">
                     </app-operator>
 
                     <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [conditional]="component.value" [components]="for.components" [variables]="variables"
-                        (remove)="removeComponent(for.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(for.components, $event)"
+                        (moveUp)="moveNestedComponentUp($event)" (moveDown)="moveNestedComponentDown($event)"
+                        (change)="setStorage()">
                     </app-conditional>
 
                     <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [hasToggle]="false"
                         [for]="component.value" [components]="for.components" [variables]="variables"
-                        (remove)="removeComponent(for.components, $event)" (change)="setStorage()">
+                        (remove)="removeComponent(for.components, $event)"
+                        (moveUp)="moveNestedComponentUp($event)" (moveDown)="moveNestedComponentDown($event)"
+                        (change)="setStorage()">
                     </app-for>
                 </div>
             </div>
@@ -110,6 +119,10 @@
 
         <div class="col-12 col-lg-2 py-1">
             <div class="d-flex justify-content-end align-items-center">
+                <app-block-reorder [index]="index" [total]="components.length"
+                    [contextLabel]="for?.variable || ('GENERAL.REPEAT' | translate)"
+                    (moveUp)="moveUp.emit($event)" (moveDown)="moveDown.emit($event)">
+                </app-block-reorder>
                 <app-command-button 
                     *ngIf="hasToggle" 
                     [mode]="'inline'" 
@@ -127,7 +140,9 @@
                     <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
                 </button>
 
-                <button class="btn btn-transparent text-danger pr-2" (click)="removeFor()" [title]="'GENERAL.REMOVE_COMANDS' | translate ">
+                <button class="btn btn-transparent text-danger pr-2" (click)="removeFor()"
+                    [attr.aria-label]="for?.variable ? ('ACCESSIBILITY.DELETE_FOR' | translate:{ name: for.variable }) : ('ACCESSIBILITY.DELETE_FOR_UNNAMED' | translate)"
+                    [title]="for?.variable ? ('ACCESSIBILITY.DELETE_FOR' | translate:{ name: for.variable }) : ('ACCESSIBILITY.DELETE_FOR_UNNAMED' | translate)">
                     <span aria-hidden="true">X</span>
                 </button>
             </div>

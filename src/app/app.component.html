@@ -16,24 +16,24 @@
           <div class="collapse navbar-collapse" id="navbarNav" [ngbCollapse]="isMenuCollapsed">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" accesskey="ALT + I" href="#area-comandos" (click)="goToStart()"
+                <a class="nav-link" accesskey="i" aria-keyshortcuts="Alt+I" href="#area-comandos" (click)="goToStart()"
                   (keyup.space)="goToStart()" [title]="'GENERAL.MENU.ALT_I' | translate">
-                  <span class="box-link">1</span>
-                  <span aria-hidden="true">{{ "GENERAL.MENU.START" | translate}}</span>
+                  <span class="box-link" aria-hidden="true">1</span>
+                  <span>{{ "GENERAL.MENU.START" | translate}}</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" accesskey="ALT + G" href="#btn-gravar-atividade" (click)="goToGravarAtividade()"
+                <a class="nav-link" accesskey="g" aria-keyshortcuts="Alt+G" href="#btn-gravar-atividade" (click)="goToGravarAtividade()"
                   (keyup.space)="goToGravarAtividade()" [title]="'GENERAL.MENU.ALT_G' | translate">
-                  <span class="box-link">2</span>
-                  <span aria-hidden="true">{{"GENERAL.MENU.MONITORING" | translate }}</span>
+                  <span class="box-link" aria-hidden="true">2</span>
+                  <span>{{"GENERAL.MENU.MONITORING" | translate }}</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" accesskey="ALT + C" href="#btn-dropdown-comandos" (click)="goToComands()"
+                <a class="nav-link" accesskey="c" aria-keyshortcuts="Alt+C" href="#btn-dropdown-comandos" (click)="goToComands()"
                   (keyup.space)="goToComands()" [title]="'GENERAL.MENU.ALT_C' | translate">
-                  <span class="box-link">3</span>
-                  <span aria-hidden="true">{{"GENERAL.MENU.COMANDS" | translate }}</span>
+                  <span class="box-link" aria-hidden="true">3</span>
+                  <span>{{"GENERAL.MENU.COMANDS" | translate }}</span>
                 </a>
               </li>
             </ul>
@@ -43,21 +43,21 @@
 
         </nav>
         <div class="d-flex ms-auto align-items-center gap-2 gap-md-3">
-          <div ngbDropdown class="d-inline-block">
+          <div ngbDropdown #langDropdown="ngbDropdown" (openChange)="onLanguageDropdownOpenChange($event)" class="d-inline-block">
             <button class="btn btn-outline-light d-flex align-items-center gap-2" id="dropdownLanguage"
-              ngbDropdownToggle
+              ngbDropdownToggle aria-haspopup="menu"
               [attr.aria-label]="(currentLanguage | uppercase) + ' - ' + ('ACCESSIBILITY.SELECT_LANGUAGE' | translate)"
               [title]="'ACCESSIBILITY.SELECT_LANGUAGE' | translate">
               <i class="bi bi-globe" aria-hidden="true"></i>
               <span>{{ currentLanguage | uppercase }}</span>
             </button>
 
-            <div ngbDropdownMenu aria-labelledby="dropdownLanguage">
-              <button class="dropdown-item" tabindex="0" (click)="changeLanguage('pt')"
+            <div ngbDropdownMenu role="menu" aria-labelledby="dropdownLanguage">
+              <button type="button" role="menuitem" ngbDropdownItem (click)="changeLanguage('pt'); langDropdown.close()"
                 [class.active]="currentLanguage === 'pt'">
                 {{ 'GENERAL.LANGUAGES.PORTUGUESE' | translate }}
               </button>
-              <button class="dropdown-item" tabindex="0" (click)="changeLanguage('en')"
+              <button type="button" role="menuitem" ngbDropdownItem (click)="changeLanguage('en'); langDropdown.close()"
                 [class.active]="currentLanguage === 'en'">
                 {{ 'GENERAL.LANGUAGES.ENGLISH' | translate }}
               </button>
@@ -81,26 +81,33 @@
                   <div *ngFor="let component of components; let i = index;">
                     <app-variable *ngIf="isVariable(component)" [index]="i" [variable]="component.value"
                       [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      (moveUp)="moveComponentUp($event)" (moveDown)="moveComponentDown($event)"
+                      (rename)="renameVariableReferences($event)"
                       (change)="setStorage()">
                     </app-variable>
 
                     <app-write *ngIf="isWriter(component)" [index]="i" [writer]="component.value"
-                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      [components]="components" [variables]="getVariablesBefore(i)" (remove)="removeComponent($event)"
+                      (moveUp)="moveComponentUp($event)" (moveDown)="moveComponentDown($event)"
                       (change)="setStorage()">
                     </app-write>
 
                     <app-operator *ngIf="isOperator(component)" [index]="i" [operator]="component.value"
-                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      [components]="components" [variables]="getVariablesBefore(i)" (remove)="removeComponent($event)"
+                      (moveUp)="moveComponentUp($event)" (moveDown)="moveComponentDown($event)"
                       (change)="setStorage()">
                     </app-operator>
 
                     <app-conditional *ngIf="isConditional(component)" [index]="i" [conditional]="component.value"
-                      [components]="components" [variables]="getVariables()" (remove)="removeComponent($event)"
+                      [components]="components" [variables]="getVariablesBefore(i)" (remove)="removeComponent($event)"
+                      (moveUp)="moveComponentUp($event)" (moveDown)="moveComponentDown($event)"
                       (change)="setStorage()">
                     </app-conditional>
 
                     <app-for *ngIf="isFor(component)" [index]="i" [for]="component.value" [components]="components"
-                      [variables]="getVariables()" (remove)="removeComponent($event)" (change)="setStorage()">
+                      [variables]="getVariablesBefore(i)" (remove)="removeComponent($event)"
+                      (moveUp)="moveComponentUp($event)" (moveDown)="moveComponentDown($event)"
+                      (change)="setStorage()">
                     </app-for>
                   </div>
                 </div>
@@ -108,6 +115,7 @@
                 <div id="botoes" class="d-flex flex-wrap pt-4 gap-2 justify-content-end">
                   <button id="btn-gravar-atividade" class="btn btn-sm p-3" (click)="handleMonitoring()"
                     [ngClass]="isMonitoring ? 'btn-active-recording' : 'btn-ready-recording'"
+                    aria-keyshortcuts="Alt+M"
                     [title]="isMonitoring ? ('GENERAL.MENU.ALT_M_OFF' | translate) : ('GENERAL.MENU.ALT_M' | translate)">
                     <i class="bi" [ngClass]="isMonitoring ? 'bi-stop-fill' : 'bi-play-fill'"></i>
                     {{ isMonitoring ? ('GENERAL.MENU.MONITOR_OFF' | translate) : ("GENERAL.MENU.MONITOR" | translate)
@@ -115,17 +123,20 @@
                   </button>
                   <app-command-button [components]="components" [variables]="getVariables()"
                     (change)="setStorage()"></app-command-button>
-                  <div id="execution-alert" aria-live="assertive" tabindex="-1" class="sr-only">
-                    {{ executionAlertMessage }}
-                  </div>
-                  <button class="btn btn-success p-3" id="runCodeButton" type="button" (click)="run()">
+                  <button class="btn btn-success p-3" id="runCodeButton" type="button" (click)="run()"
+                    aria-keyshortcuts="Alt+E" [title]="'GENERAL.MENU.ALT_E' | translate">
                     {{ "GENERAL.BUTTON.RUN" | translate }}
                     <span class="bi bi-play-fill space-icon"></span>
                   </button>
-                  <button class="btn btn-danger p-3" id="cleanCommands" type="button" (click)="clear()">
+                  <button class="btn btn-danger p-3" id="cleanCommands" type="button" (click)="clear()"
+                    aria-keyshortcuts="Alt+X" [title]="'GENERAL.MENU.ALT_X' | translate">
                     {{ "GENERAL.BUTTON.DELETE" | translate }}
                     <span class="bi bi-trash-fill space-icon"></span>
                   </button>
+                  <div id="execution-alert" role="alert" aria-live="assertive" tabindex="-1"
+                    [ngClass]="executionAlertMessage ? 'alert alert-danger mt-2 mb-0 text-start w-100' : 'sr-only'">
+                    {{ executionAlertMessage }}
+                  </div>
                 </div>
               </div>
             </fieldset>

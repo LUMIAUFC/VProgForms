@@ -1,0 +1,14 @@
+<div class="d-inline-flex align-items-center">
+    <button class="btn btn-transparent px-1" type="button" data-direction="up" [disabled]="isFirst"
+        (click)="onMoveUp()"
+        [attr.aria-label]="'ACCESSIBILITY.MOVE_COMMAND_UP' | translate:{ label: contextLabel }"
+        [title]="'ACCESSIBILITY.MOVE_COMMAND_UP' | translate:{ label: contextLabel }">
+        <span class="bi bi-arrow-up" aria-hidden="true"></span>
+    </button>
+    <button class="btn btn-transparent px-1" type="button" data-direction="down" [disabled]="isLast"
+        (click)="onMoveDown()"
+        [attr.aria-label]="'ACCESSIBILITY.MOVE_COMMAND_DOWN' | translate:{ label: contextLabel }"
+        [title]="'ACCESSIBILITY.MOVE_COMMAND_DOWN' | translate:{ label: contextLabel }">
+        <span class="bi bi-arrow-down" aria-hidden="true"></span>
+    </button>
+</div>

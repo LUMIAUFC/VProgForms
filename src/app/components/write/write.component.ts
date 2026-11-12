@@ -21,6 +21,8 @@ export class WriteComponent implements OnInit {
 
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
+  @Output("moveUp") moveUp = new EventEmitter<number>();
+  @Output("moveDown") moveDown = new EventEmitter<number>();
 
   idElement: any;
 

@@ -74,33 +74,49 @@
                     </select>
                 </div>
 
-                <div class="op-col">
-                    <button class="trash" [title]="'GENERAL.CLEAN' | translate" (click)="clearOperator(i)"><i class="bi bi-trash"></i></button>
+                <div class="op-col d-inline-flex align-items-center gap-1">
+                    <button class="btn btn-transparent px-1" type="button" [disabled]="i === 0"
+                        [attr.aria-label]="op?.value ? ('ACCESSIBILITY.MOVE_TERM_UP' | translate:{ term: op.value }) : ('ACCESSIBILITY.MOVE_EMPTY_TERM_UP' | translate)"
+                        [title]="op?.value ? ('ACCESSIBILITY.MOVE_TERM_UP' | translate:{ term: op.value }) : ('ACCESSIBILITY.MOVE_EMPTY_TERM_UP' | translate)"
+                        (click)="moveOperatorTermUp(i)">
+                        <i class="bi bi-arrow-up" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-transparent px-1" type="button"
+                        [disabled]="i >= operator.operators.length - 1"
+                        [attr.aria-label]="op?.value ? ('ACCESSIBILITY.MOVE_TERM_DOWN' | translate:{ term: op.value }) : ('ACCESSIBILITY.MOVE_EMPTY_TERM_DOWN' | translate)"
+                        [title]="op?.value ? ('ACCESSIBILITY.MOVE_TERM_DOWN' | translate:{ term: op.value }) : ('ACCESSIBILITY.MOVE_EMPTY_TERM_DOWN' | translate)"
+                        (click)="moveOperatorTermDown(i)">
+                        <i class="bi bi-arrow-down" aria-hidden="true"></i>
+                    </button>
+                    <button class="trash" type="button"
+                        [attr.aria-label]="op?.value ? ('ACCESSIBILITY.REMOVE_EXPRESSION_TERM' | translate:{ term: op.value }) : ('ACCESSIBILITY.REMOVE_EMPTY_TERM' | translate)"
+                        [title]="op?.value ? ('ACCESSIBILITY.REMOVE_EXPRESSION_TERM' | translate:{ term: op.value }) : ('ACCESSIBILITY.REMOVE_EMPTY_TERM' | translate)"
+                        (click)="clearOperator(i)"><i class="bi bi-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
 
-            <div ngbDropdown class="d-flex align-items-center mt-1" *ngIf="operator.currentVariable">
-                <button type="button" class="btn btn-primary" id="dropdownAdd" ngbDropdownToggle>
+            <div ngbDropdown #addDropdown="ngbDropdown" (openChange)="onAddDropdownOpenChange($event)" container="body" class="d-flex align-items-center mt-1" *ngIf="operator.currentVariable">
+                <button type="button" class="btn btn-primary" [id]="'dropdownAdd-' + index" ngbDropdownToggle aria-haspopup="menu">
                     <span aria-hidden="true">+</span>
                     <strong aria-hidden="false" class="sr-only">{{ "GENERAL.ADD" | translate }}</strong>
                 </button>
 
-                <div ngbDropdownMenu aria-labelledby="dropdownAdd">
-                    <button class="dropdown-item" tabindex="0" (click)="addOperator('PARENTHESIS', '(')">
+                <div ngbDropdownMenu role="menu" [attr.aria-labelledby]="'dropdownAdd-' + index">
+                    <button type="button" role="menuitem" ngbDropdownItem (click)="addOperator('PARENTHESIS', '('); addDropdown.close()">
                         <span aria-hidden="true">(</span>
                         <span aria-hidden="false" class="sr-only">{{'GENERAL.OPEN_PARENTHESES' | translate }}</span>
                     </button>
-                      <button class="dropdown-item" tabindex="0" (click)="addOperator('PARENTHESIS', ')')">
+                    <button type="button" role="menuitem" ngbDropdownItem (click)="addOperator('PARENTHESIS', ')'); addDropdown.close()">
                         <span aria-hidden="true">)</span>
                         <span aria-hidden="false" class="sr-only">{{'GENERAL.CLOSE_PARENTHESES' | translate }}</span>
                     </button>
-                    <button class="dropdown-item" tabindex="0" (click)="addOperator('VARIABLE')">
+                    <button type="button" role="menuitem" ngbDropdownItem (click)="addOperator('VARIABLE'); addDropdown.close()">
                         <span>{{ "GENERAL.VARIABLE" | translate }}</span>
                     </button>
-                    <button class="dropdown-item" tabindex="0" (click)="addOperator('VALUE')">
+                    <button type="button" role="menuitem" ngbDropdownItem (click)="addOperator('VALUE'); addDropdown.close()">
                         <span>{{ "GENERAL.VALUE" | translate }}</span>
                     </button>
-                    <button class="dropdown-item" tabindex="0" (click)="addOperator('OPERATOR')" *ngIf="(operator.currentVariable?.type == 'INTEGER' || operator.currentVariable?.type == 'DOUBLE') && operator.operators.length > 0">
+                    <button type="button" role="menuitem" ngbDropdownItem (click)="addOperator('OPERATOR'); addDropdown.close()" *ngIf="(operator.currentVariable?.type == 'INTEGER' || operator.currentVariable?.type == 'DOUBLE') && operator.operators.length > 0">
                         <span>{{ "GENERAL.OPERATOR_MATH" | translate }}</span>
                     </button>
                 </div>
@@ -109,6 +125,10 @@
 
         <div class="col-12 col-lg-3 py-1">
             <div class="d-flex justify-content-end align-items-center">
+                <app-block-reorder [index]="index" [total]="components.length"
+                    [contextLabel]="operator?.reference || ('COMANDS.BUTTON.MATH' | translate)"
+                    (moveUp)="moveUp.emit($event)" (moveDown)="moveDown.emit($event)">
+                </app-block-reorder>
                 <app-command-button 
                     [mode]="'inline'" 
                     [text]="false" 
@@ -124,7 +144,9 @@
                     <span *ngIf="!isHidden" class="bi bi-lock-fill" aria-hidden="true"></span>
                 </button>
 
-                <button class="btn btn-transparent text-danger pr-2" (click)="removeOperator()" [title]="'GENERAL.REMOVE_COMANDS' | translate "><span aria-hidden="true">X</span></button>
+                <button class="btn btn-transparent text-danger pr-2" (click)="removeOperator()"
+                    [attr.aria-label]="operator?.reference ? ('ACCESSIBILITY.DELETE_OPERATOR' | translate:{ name: operator.reference }) : ('ACCESSIBILITY.DELETE_OPERATOR_UNNAMED' | translate)"
+                    [title]="operator?.reference ? ('ACCESSIBILITY.DELETE_OPERATOR' | translate:{ name: operator.reference }) : ('ACCESSIBILITY.DELETE_OPERATOR_UNNAMED' | translate)"><span aria-hidden="true">X</span></button>
             </div>
         </div>
     </div>

@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AccessibleMathPipe } from '../../pipes/accessible-math.pipe';
 import { TypesEnum } from 'src/app/enums/types.enum';
+import { removeConditionalTermAt } from '../../utils/expression-terms.utils';
+import { moveItemDown, moveItemUp } from '../../utils/reorder.utils';
 
 @Component({
   selector: 'app-conditional',
@@ -33,6 +35,8 @@ export class ConditionalComponent implements OnInit {
 
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
+  @Output("moveUp") moveUp = new EventEmitter<number>();
+  @Output("moveDown") moveDown = new EventEmitter<number>();
 
   constructor(public translate: TranslateService, private accMath: AccessibleMathPipe) { }
 
@@ -67,13 +71,25 @@ export class ConditionalComponent implements OnInit {
     this.setStorage();
   }
 
+  moveNestedComponentUp(branch: 'condition' | 'nocondition', index: number): void {
+    this.conditional[branch].components = moveItemUp(this.conditional[branch].components, index);
+    this.setStorage();
+  }
+
+  moveNestedComponentDown(branch: 'condition' | 'nocondition', index: number): void {
+    this.conditional[branch].components = moveItemDown(this.conditional[branch].components, index);
+    this.setStorage();
+  }
+
   getComponentVariables(components: any) {
     return components ? components.filter((c: any) => c.type == TypesEnum.VARIABLE) : [];
   }
 
   focusConditional(index: any) {
     setTimeout(() => {
-      let conditionalElement = document.getElementById(`conditional-op-${this.index}-${index}`);
+      const conditionalElement =
+        document.getElementById(`conditional-op-${this.index}-${index}`) ??
+        document.getElementById(`conditional-type-${this.index}-${index}`);
 
       if (conditionalElement) {
         conditionalElement.focus();
@@ -128,9 +144,7 @@ export class ConditionalComponent implements OnInit {
       }, 200);
     }
     else {
-      setTimeout(() => {
-        document.getElementById("conditional-op-" + this.index + "-0")?.focus();
-      }, 200);
+      this.focusConditional(0);
     }
   }
 
@@ -184,6 +198,20 @@ export class ConditionalComponent implements OnInit {
     this.remove.emit(this.index);
   }
 
+  removeConditionTerm(termIndex: number) {
+    this.conditional.conditionals = removeConditionalTermAt(
+      this.conditional.conditionals,
+      termIndex
+    );
+    this.changeValue();
+
+    const targetIndex = Math.max(
+      0,
+      Math.min(termIndex - 2, this.conditional.conditionals.length - 1)
+    );
+    this.focusConditional(targetIndex);
+  }
+
   clear() {
     this.conditional.conditionals = [];
 
@@ -194,7 +222,7 @@ export class ConditionalComponent implements OnInit {
     });
 
     this.focusConditional(this.conditional.conditionals.length - 1);
-    this.setStorage();
+    this.changeValue();
   }
 
   clearValue(conditional: any) {

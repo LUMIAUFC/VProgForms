@@ -1,8 +1,11 @@
 <div id="terminal" class="acessible-terminal">
     <div class="bash">
         <div class="bash-title">
-            <span class="bi bi-eraser-fill"></span>
+            <span class="bi bi-eraser-fill" aria-hidden="true"></span>
             <span id="title-terminal" tabindex="0">Terminal</span>
+            <span *ngIf="isRecordingLog" class="badge bg-warning text-dark ms-2" aria-hidden="true">
+                {{ "TERMINAL.RECORDING_BADGE" | translate }}
+            </span>
         </div>
 
         <div id="ivprog-term" class="bash-body ivprog-term-div">
@@ -18,7 +21,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="isRecordingLog" id="log-recording-message" tabindex="-1" aria-live="assertive"
+                <div *ngIf="isRecordingLog && !isRunning && !showConsent && !isDownloadReady" id="log-recording-message" tabindex="-1" aria-live="assertive"
                     class="recording-log-container" style="outline: none;">
                     <p class="log-ready">[LOG] Monitoramento pronto. Aguardando interações...</p>
                     <p class="log-recording">[LOG] Gravando atividade<span class="loading-dots">...</span></p>

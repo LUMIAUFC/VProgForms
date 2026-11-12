@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AccessibleMathPipe } from '../../pipes/accessible-math.pipe';
 import { TypesEnum } from 'src/app/enums/types.enum';
+import { moveItemDown, moveItemUp } from '../../utils/reorder.utils';
 
 @Component({
   selector: 'app-for',
@@ -37,6 +38,8 @@ export class ForComponent implements OnInit {
 
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
+  @Output("moveUp") moveUp = new EventEmitter<number>();
+  @Output("moveDown") moveDown = new EventEmitter<number>();
 
   constructor(public translate: TranslateService, private accMath: AccessibleMathPipe) { }
 
@@ -65,6 +68,16 @@ export class ForComponent implements OnInit {
 
   removeComponent(components: any, index: number) {
     components.splice(index, 1);
+    this.setStorage();
+  }
+
+  moveNestedComponentUp(index: number): void {
+    this.for.components = moveItemUp(this.for.components, index);
+    this.setStorage();
+  }
+
+  moveNestedComponentDown(index: number): void {
+    this.for.components = moveItemDown(this.for.components, index);
     this.setStorage();
   }
 

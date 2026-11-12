@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
 import { NgSelectComponent } from '@ng-select/ng-select/public-api';
+import { normalizeNumericFallback } from '../../utils/reorder.utils';
 
 @Component({
   selector: 'app-variable',
@@ -16,14 +17,19 @@ export class VariableComponent implements OnInit {
   @Input("variables") variables: any[] = [];
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
+  @Output("moveUp") moveUp = new EventEmitter<number>();
+  @Output("moveDown") moveDown = new EventEmitter<number>();
+  @Output("rename") rename = new EventEmitter<{ oldName: string; newName: string }>();
 
   @ViewChild('ngSelect') ngSelect!: NgSelectComponent;
 
   isHidden: boolean = true;
+  private lastCommittedName: string = '';
 
   constructor() { }
 
   ngOnInit(): void {
+    this.lastCommittedName = String(this.variable?.name ?? '').trim();
     this.focusElement(`variable-type-${this.index}`)
     // setTimeout(() => {
     //   this.ngSelect.focus();
@@ -70,6 +76,22 @@ export class VariableComponent implements OnInit {
       setTimeout(() => {
         document.getElementById("variable-type-" + this.index)?.focus();
       }, 200);
+    }
+  }
+
+  onNameChange(): void {
+    const newName = String(this.variable?.name ?? '').trim();
+    if (this.lastCommittedName && newName && this.lastCommittedName !== newName) {
+      this.rename.emit({ oldName: this.lastCommittedName, newName });
+    }
+    this.lastCommittedName = newName;
+    this.setStorage();
+  }
+
+  ensureNumericValue(): void {
+    if (this.variable.type === 'INTEGER' || this.variable.type === 'DOUBLE') {
+      this.variable.value = normalizeNumericFallback(this.variable.value);
+      this.setStorage();
     }
   }
 

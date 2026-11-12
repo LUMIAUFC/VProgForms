@@ -14,17 +14,18 @@
     },
     "MENU": {
       "START": "Ir para Área de Comandos",
-      "ALT_I": "ALT + I Ir para Área de Comandos",
+      "ALT_I": "ALT + I, Ir para Área de Comandos",
       "MONITORING": "Ir para monitoramento",
-      "ALT_G": "ALT + G Ir para monitoramento",
+      "ALT_G": "ALT + G, Ir para monitoramento",
       "COMANDS": "Ir para a lista de comandos",
-      "ALT_C": "ALT + C Ir para a lista de comandos",
+      "ALT_C": "ALT + C, Ir para a lista de comandos",
       "PROGRAM": "Executar programa",
-      "ALT_E": "ALT + E Executar programa",
+      "ALT_E": "ALT + E, Executar programa",
       "MONITOR": "Gravar Atividade",
       "MONITOR_OFF": "Encerrar Gravação",
-      "ALT_M": "ALT + M Gravar Atividade",
-      "ALT_M_OFF": "ALT + M Encerrar Gravação"
+      "ALT_M": "ALT + M, Gravar Atividade",
+      "ALT_M_OFF": "ALT + M, Encerrar Gravação",
+      "ALT_X": "ALT + X, Excluir comandos"
     },
     "BUTTON": {
       "RUN": "Executar",
@@ -48,6 +49,8 @@
     "VALUE_OF": "Valor de",
     "INCREMENT": "Incrementar",
     "DECREMENT": "Decrementar",
+    "STEP_INCREMENT": "Passo +",
+    "STEP_DECREMENT": "Passo -",
     "STEP_VALUE": "Valor numérico do passo",
     "SELECT_OPERATOR": "Selecione a operação",
     "ADD": "Adicionar",
@@ -92,6 +95,9 @@
   "COMANDS": {
     "TITLE": "Comandos",
     "TITLE2": "Faça",
+    "ADD_IN_THEN": "Adicionar comando no bloco Então",
+    "ADD_IN_ELSE": "Adicionar comando no bloco Senão",
+    "ADD_IN_FOR": "Adicionar comando no laço Repita",
     "BUTTON": {
       "NEW_VARIABLE": "Nova Variável",
       "MATH": "Atribuição/Matemática",
@@ -113,7 +119,8 @@
   },
   "TERMINAL": {
     "START": "Começo da execução...",
-    "FINISH": "Fim da execução..."
+    "FINISH": "Fim da execução...",
+    "RECORDING_BADGE": "Gravando atividade"
   },
   "CONSENT_MODAL": {
     "TITLE": "Aviso de Consentimento para Monitoramento",
@@ -140,6 +147,45 @@
     "LOGO_IVPROG": "Logo iVProg Forms",
     "LOGO_LUMIA": "Logo Lumia",
     "LOGO_UFC": "Logo da Universidade Federal do Ceará",
-    "SELECT_LANGUAGE": "Selecionar idioma"
+    "SELECT_LANGUAGE": "Selecionar idioma",
+    "DELETE_VARIABLE": "Excluir variável {{name}}",
+    "DELETE_VARIABLE_UNNAMED": "Excluir variável",
+    "DELETE_OPERATOR": "Excluir atribuição da variável {{name}}",
+    "DELETE_OPERATOR_UNNAMED": "Excluir bloco de atribuição",
+    "REMOVE_EXPRESSION_TERM": "Remover termo {{term}} da expressão",
+    "REMOVE_EMPTY_TERM": "Remover termo vazio da expressão",
+    "DELETE_WRITE": "Excluir comando Escreva {{target}}",
+    "DELETE_WRITE_UNNAMED": "Excluir comando Escreva",
+    "DELETE_CONDITIONAL": "Excluir bloco Se…Então",
+    "DELETE_CONDITIONAL_WITH_EXPR": "Excluir bloco Se ({{condition}})",
+    "CLEAR_CONDITION": "Limpar toda a condição do bloco Se",
+    "REMOVE_CONDITION_TERM": "Remover termo {{term}} da condição",
+    "REMOVE_EMPTY_CONDITION_TERM": "Remover termo vazio da condição",
+    "DELETE_FOR": "Excluir bloco Repita_Para da variável {{name}}",
+    "DELETE_FOR_UNNAMED": "Excluir bloco Repita_Para",
+    "MOVE_COMMAND_UP": "Mover {{label}} para cima",
+    "MOVE_COMMAND_DOWN": "Mover {{label}} para baixo",
+    "MOVE_TERM_UP": "Mover termo {{term}} para cima",
+    "MOVE_TERM_DOWN": "Mover termo {{term}} para baixo",
+    "MOVE_EMPTY_TERM_UP": "Mover termo vazio para cima",
+    "MOVE_EMPTY_TERM_DOWN": "Mover termo vazio para baixo"
+  },
+  "VALIDATION": {
+    "VARIABLE_NAME_EMPTY": "Existe uma variável sem nome definido. Preencha o nome da variável antes de executar.",
+    "VARIABLE_NAME_INVALID": "O nome da variável \"{{name}}\" não pode conter espaços. Corrija antes de executar.",
+    "VARIABLE_VALUE_EMPTY": "A variável \"{{name}}\" está sem valor inicial. Informe um valor antes de executar.",
+    "VARIABLE_NOT_IN_SCOPE": "A variável \"{{name}}\" usada em um comando não existe ou está declarada após esse comando. Verifique a ordem dos blocos ou selecione a variável novamente.",
+    "OPERATOR_TARGET_EMPTY": "Existe um bloco de Atribuição/Matemática sem variável de destino selecionada.",
+    "OPERATOR_EXPRESSION_INCOMPLETE": "A atribuição para \"{{name}}\" está com a expressão incompleta. Preencha todos os termos antes de executar.",
+    "WRITER_INCOMPLETE": "Existe um comando Escreva incompleto. Selecione o tipo e o conteúdo antes de executar.",
+    "CONDITIONAL_INCOMPLETE": "Existe uma estrutura Se…Então com condição incompleta. Verifique os blocos antes de executar.",
+    "FOR_INCOMPLETE": "Existe um laço Repita_Para com campos incompletos. Preencha variável, início, fim e passo antes de executar.",
+    "FOR_INVALID_STEP": "No laço Repita_Para da variável \"{{name}}\", o valor do passo deve ser um número maior que zero.",
+    "FOR_INVALID_DIRECTION": "No laço Repita_Para da variável \"{{name}}\", a direção do passo ({{direction}}) é incompatível com os valores de início ({{start}}) e fim ({{finish}})."
+  },
+  "EXECUTION_ERROR": {
+    "INTERNAL_SYNTAX": "Não foi possível executar o programa porque há um bloco com expressão ou comando incompleto. Revise os campos preenchidos.",
+    "INFINITE_LOOP": "A execução foi interrompida porque o programa excedeu o limite de instruções (possível laço infinito). Verifique os limites e o passo da repetição.",
+    "GENERIC": "Erro ao executar o programa. Verifique se todas as variáveis e expressões estão preenchidas corretamente."
   }
 }

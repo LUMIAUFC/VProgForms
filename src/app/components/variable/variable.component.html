@@ -24,7 +24,7 @@
         </div>
 
         <div class="col-12 col-sm-6 col-md-3">
-            <input id="variable-name-{{index}}" type="text" class="form-control" [title]="'VARIABLE.NAME' | translate" [attr.aria-label]="'VARIABLE.NAME' | translate" [(ngModel)]="variable.name" (keyup.enter)="focusElement('variable-value-' + index)" />
+            <input id="variable-name-{{index}}" type="text" class="form-control" [title]="'VARIABLE.NAME' | translate" [attr.aria-label]="'VARIABLE.NAME' | translate" [(ngModel)]="variable.name" (change)="onNameChange()" (keyup.enter)="focusElement('variable-value-' + index)" />
         </div>
 
         <div class="col-12 col-sm-2 col-md-2 d-flex align-items-center justify-content-start justify-content-sm-center">
@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'INTEGER' || variable.type == 'DOUBLE'">
-            <input id="variable-value-{{index}}" type="number" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value">
+            <input id="variable-value-{{index}}" type="number" class="form-control" [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name" [(ngModel)]="variable.value" (focus)="$any($event.target).select()" (blur)="ensureNumericValue()" (change)="setStorage()">
         </div>
 
         <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'STRING'">
@@ -49,6 +49,10 @@
 
     <div class="col-12 col-lg-3 py-1">
         <div class="d-flex justify-content-end align-items-center">
+            <app-block-reorder [index]="index" [total]="components.length"
+                [contextLabel]="variable?.name || ('GENERAL.VARIABLE' | translate)"
+                (moveUp)="moveUp.emit($event)" (moveDown)="moveDown.emit($event)">
+            </app-block-reorder>
             <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'COMANDS.TITLE'" [components]="components"
             [variables]="variables" (change)="setStorage()"></app-command-button>
             <button class="btn btn-transparent" (click)="toggleHidden()" 
@@ -59,7 +63,8 @@
             </button>
 
             <button class="btn btn-transparent text-danger pr-2" (click)="removeVariable()"
-            [title]="'GENERAL.READ_DELETE' | translate"><span aria-hidden="true">X</span></button>
+            [attr.aria-label]="variable?.name ? ('ACCESSIBILITY.DELETE_VARIABLE' | translate:{ name: variable.name }) : ('ACCESSIBILITY.DELETE_VARIABLE_UNNAMED' | translate)"
+            [title]="variable?.name ? ('ACCESSIBILITY.DELETE_VARIABLE' | translate:{ name: variable.name }) : ('ACCESSIBILITY.DELETE_VARIABLE_UNNAMED' | translate)"><span aria-hidden="true">X</span></button>
         </div>
     </div>
 </div>

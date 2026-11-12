@@ -1,4 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { focusFirstDropdownItem } from '../../utils/dropdown-focus.utils';
+import { removeOperatorTermAt } from '../../utils/expression-terms.utils';
+import { moveIndexedItemDown, moveIndexedItemUp } from '../../utils/reorder.utils';
 
 @Component({
   selector: 'app-operator',
@@ -23,6 +26,8 @@ export class OperatorComponent implements OnInit {
 
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
+  @Output("moveUp") moveUp = new EventEmitter<number>();
+  @Output("moveDown") moveDown = new EventEmitter<number>();
 
   constructor() { }
 
@@ -57,9 +62,32 @@ export class OperatorComponent implements OnInit {
     }, 200);
   }
 
-  clearOperator(index: any) {
-    this.operator.operators.splice(index, 1);
+  clearOperator(index: number) {
+    this.operator.operators = removeOperatorTermAt(this.operator.operators, index);
     this.changeValue();
+
+    if (this.operator.operators.length > 0) {
+      const targetIndex = Math.min(index, this.operator.operators.length - 1);
+      this.focusOperator(targetIndex);
+    }
+  }
+
+  moveOperatorTermUp(index: number): void {
+    if (index <= 0) {
+      return;
+    }
+    this.operator.operators = moveIndexedItemUp(this.operator.operators, index);
+    this.changeValue();
+    this.focusOperator(index - 1);
+  }
+
+  moveOperatorTermDown(index: number): void {
+    if (!Array.isArray(this.operator.operators) || index >= this.operator.operators.length - 1) {
+      return;
+    }
+    this.operator.operators = moveIndexedItemDown(this.operator.operators, index);
+    this.changeValue();
+    this.focusOperator(index + 1);
   }
 
   clearValue(operator: any) {
@@ -141,5 +169,11 @@ export class OperatorComponent implements OnInit {
 
   compareFn(var1: any, var2: any) {
     return var1 && var2 ? var1.name === var2.name : var1 === var2;
+  }
+
+  onAddDropdownOpenChange(isOpen: boolean): void {
+    if (isOpen) {
+      focusFirstDropdownItem(`dropdownAdd-${this.index}`);
+    }
   }
 }
