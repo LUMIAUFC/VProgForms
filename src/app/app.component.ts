@@ -422,6 +422,7 @@ export class AppComponent {
     this.downloadableLog = null;
     this.isMonitoring = true;
     this.isRecordingLog = true;
+    this.audioFeedback?.playEffect('recordStart');
 
     setTimeout(() => { document.getElementById('log-recording-message')?.focus(); }, 100);
 
@@ -439,6 +440,7 @@ export class AppComponent {
   async stopMonitoring() {
     this.isMonitoring = false;
     this.isRecordingLog = false;
+    this.audioFeedback?.playEffect('recordStop');
     if (this.currentLogId) {
       await this.logService.atualizarLog(this.currentLogId, {
         dataHoraFim: new Date()
@@ -458,6 +460,7 @@ export class AppComponent {
   downloadLog() {
     if (this.downloadableLog) {
       this.logExportService.exportLogTxt(this.downloadableLog);
+      this.audioFeedback?.playEffect('success');
     }
   }
 

@@ -7,6 +7,8 @@ export type SoundEffectType =
   | 'delete'
   | 'clearAll'
   | 'toggle'
+  | 'recordStart'
+  | 'recordStop'
   | 'success'
   | 'error';
 
@@ -51,6 +53,14 @@ export const SOUND_EFFECT_PROFILES: Readonly<Record<SoundEffectType, readonly To
   ],
   toggle: [
     { frequency: 493.88, durationMs: 40 }
+  ],
+  recordStart: [
+    { frequency: 587.33, durationMs: 55 },
+    { frequency: 880, durationMs: 75 }
+  ],
+  recordStop: [
+    { frequency: 659.25, durationMs: 55 },
+    { frequency: 440, durationMs: 75 }
   ],
   success: [
     { frequency: 523.25, durationMs: 60 },

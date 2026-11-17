@@ -13,6 +13,7 @@ import { TerminalComponent } from './components/terminal/terminal.component';
 import { VariableComponent } from './components/variable/variable.component';
 import { WriteComponent } from './components/write/write.component';
 import { BlockBoundaryDirective } from './directives/block-boundary.directive';
+import { AudioFeedbackService } from './core/services/audio-feedback.service';
 import { LogExportService } from './features/logs/services/log-export.service';
 import { LogService } from './features/logs/services/log.service';
 import { AccessibleMathPipe } from './pipes/accessible-math.pipe';
@@ -114,4 +115,30 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     expect(soundBtn.getAttribute('aria-pressed')).toBe('false');
   });
+
+  it('deve tocar feedback sonoro ao iniciar e encerrar a gravação quando houver consentimento', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    const audioFeedback = TestBed.inject(AudioFeedbackService);
+    const playSpy = spyOn(audioFeedback, 'playEffect');
+
+    fixture.detectChanges();
+
+    void app.startMonitoring();
+    tick(250);
+    expect(playSpy).not.toHaveBeenCalled();
+
+    localStorage.setItem('consentimento_coleta', 'true');
+    void app.startMonitoring();
+    tick(3600);
+    expect(playSpy).toHaveBeenCalledWith('recordStart');
+
+    void app.stopMonitoring();
+    tick(200);
+    expect(playSpy).toHaveBeenCalledWith('recordStop');
+
+    app.downloadableLog = { dataHoraInicio: new Date(), dataHoraFim: new Date(), execucoes: [] };
+    app.downloadLog();
+    expect(playSpy).toHaveBeenCalledWith('success');
+  }));
 });

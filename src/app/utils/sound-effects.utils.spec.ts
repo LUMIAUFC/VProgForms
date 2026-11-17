@@ -15,6 +15,8 @@ describe('sound-effects.utils', () => {
       'delete',
       'clearAll',
       'toggle',
+      'recordStart',
+      'recordStop',
       'success',
       'error'
     ];
