@@ -54,4 +54,23 @@ describe('block-boundary.utils', () => {
       done();
     }, 60);
   });
+
+  it('deve respeitar atraso customizado e sobrescrever anúncio pendente quando chamado em sequência', (done) => {
+    const announcer = document.createElement('div');
+    announcer.id = 'block-boundary-announcer';
+    document.body.appendChild(announcer);
+
+    announceBlockBoundaryExit('Primeiro anúncio', 120);
+    announceBlockBoundaryExit('Segundo anúncio', 120);
+
+    setTimeout(() => {
+      expect(announcer.textContent).toBe('');
+    }, 60);
+
+    setTimeout(() => {
+      expect(announcer.textContent).toBe('Segundo anúncio');
+      document.body.removeChild(announcer);
+      done();
+    }, 160);
+  });
 });

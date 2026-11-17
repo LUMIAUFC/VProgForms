@@ -75,19 +75,24 @@ export class AudioFeedbackService {
     }
   }
 
-  announce(messageKey: string, params?: Record<string, string | number>): void {
+  announce(
+    messageKey: string,
+    params?: Record<string, string | number>,
+    delayMs?: number
+  ): void {
     const message = this.translate ? this.translate.instant(messageKey, params) : messageKey;
-    announceBlockBoundaryExit(message);
+    announceBlockBoundaryExit(message, delayMs);
   }
 
   notifyAction(
     effect: SoundEffectType,
     messageKey?: string,
-    params?: Record<string, string | number>
+    params?: Record<string, string | number>,
+    announceDelayMs?: number
   ): void {
     this.playEffect(effect);
     if (messageKey) {
-      this.announce(messageKey, params);
+      this.announce(messageKey, params, announceDelayMs);
     }
   }
 

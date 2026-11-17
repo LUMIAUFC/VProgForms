@@ -23,15 +23,27 @@ export const shouldAnnounceBlockExit = (
   return true;
 };
 
-export const announceBlockBoundaryExit = (message: string): void => {
+const DEFAULT_ANNOUNCE_DELAY_MS = 30;
+const pendingAnnounceState: { timer: ReturnType<typeof setTimeout> | null } = { timer: null };
+
+export const announceBlockBoundaryExit = (
+  message: string,
+  delayMs: number = DEFAULT_ANNOUNCE_DELAY_MS
+): void => {
   const announcer = document.getElementById('block-boundary-announcer');
   const trimmed = message.trim();
   if (!announcer || !trimmed) {
     return;
   }
 
+  if (pendingAnnounceState.timer !== null) {
+    clearTimeout(pendingAnnounceState.timer);
+    pendingAnnounceState.timer = null;
+  }
+
   announcer.textContent = '';
-  setTimeout(() => {
+  pendingAnnounceState.timer = setTimeout(() => {
     announcer.textContent = trimmed;
-  }, 30);
+    pendingAnnounceState.timer = null;
+  }, Math.max(0, delayMs));
 };

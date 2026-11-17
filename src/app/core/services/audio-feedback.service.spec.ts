@@ -54,4 +54,31 @@ describe('AudioFeedbackService', () => {
       done();
     }, 60);
   });
+
+  it('deve respeitar announceDelayMs opcional em notifyAction', (done) => {
+    const announcer = document.createElement('div');
+    announcer.id = 'block-boundary-announcer';
+    document.body.appendChild(announcer);
+
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('pt', {
+      ACCESSIBILITY: {
+        BLOCK_REMOVED: 'Bloco {{label}} removido'
+      }
+    });
+    translate.use('pt');
+
+    const service = TestBed.inject(AudioFeedbackService);
+    service.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label: 'var1' }, 140);
+
+    setTimeout(() => {
+      expect(announcer.textContent).toBe('');
+    }, 70);
+
+    setTimeout(() => {
+      expect(announcer.textContent).toBe('Bloco var1 removido');
+      document.body.removeChild(announcer);
+      done();
+    }, 180);
+  });
 });

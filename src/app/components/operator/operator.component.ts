@@ -61,7 +61,7 @@ export class OperatorComponent implements OnInit {
     this.focusOperator(this.operator.operators.length - 1);
   }
 
-  focusOperator(indexOp: any) {
+  focusOperator(indexOp: any, delayMs: number = 200) {
     setTimeout(() => {
       const operatorElement =
         document.getElementById(`operator-op-${this.index}-${indexOp}`) ??
@@ -70,24 +70,24 @@ export class OperatorComponent implements OnInit {
       if (operatorElement) {
         operatorElement.focus();
       }
-    }, 200);
+    }, delayMs);
   }
 
   clearOperator(index: number) {
     this.operator.operators = removeOperatorTermAt(this.operator.operators, index);
     this.changeValue();
-    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED');
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED', undefined, 200);
 
     if (this.operator.operators.length > 0) {
       const targetIndex = Math.min(index, this.operator.operators.length - 1);
-      this.focusOperator(targetIndex);
+      this.focusOperator(targetIndex, 50);
     } else {
       setTimeout(() => {
         const receiveElement =
           document.getElementById(`operator-receive-${this.index}`) ??
           document.getElementById(`select-var-${this.index}`);
         receiveElement?.focus();
-      }, 200);
+      }, 50);
     }
   }
 

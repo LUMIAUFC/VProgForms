@@ -93,7 +93,7 @@ export class ConditionalComponent implements OnInit {
     return components ? components.filter((c: any) => c.type == TypesEnum.VARIABLE) : [];
   }
 
-  focusConditional(index: any) {
+  focusConditional(index: any, delayMs: number = 200) {
     setTimeout(() => {
       const conditionalElement =
         document.getElementById(`conditional-op-${this.index}-${index}`) ??
@@ -102,7 +102,7 @@ export class ConditionalComponent implements OnInit {
       if (conditionalElement) {
         conditionalElement.focus();
       }
-    }, 200);
+    }, delayMs);
   }
 
   addConditional() {
@@ -217,22 +217,22 @@ export class ConditionalComponent implements OnInit {
     this.changeValue();
 
     if (this.conditional.conditionals.length < prevLength) {
-      this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED');
+      this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED', undefined, 200);
     }
 
     const targetIndex = Math.max(
       0,
       Math.min(termIndex - 2, this.conditional.conditionals.length - 1)
     );
-    this.focusConditional(targetIndex);
+    this.focusConditional(targetIndex, 50);
   }
 
   clear() {
-    this.resetConditionTerms();
-    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.CONDITION_CLEARED');
+    this.resetConditionTerms(50);
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.CONDITION_CLEARED', undefined, 200);
   }
 
-  private resetConditionTerms(): void {
+  private resetConditionTerms(focusDelayMs: number = 200): void {
     this.conditional.conditionals = [];
 
     this.conditional.conditionals.push({
@@ -241,7 +241,7 @@ export class ConditionalComponent implements OnInit {
       value: '',
     });
 
-    this.focusConditional(this.conditional.conditionals.length - 1);
+    this.focusConditional(this.conditional.conditionals.length - 1, focusDelayMs);
     this.changeValue();
   }
 

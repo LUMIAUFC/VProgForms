@@ -138,7 +138,10 @@ export class AppComponent {
     const label = resolveBlockLabel(removed, this.translate.instant('COMANDS.TITLE'));
     this.components.splice(index, 1);
     this.setStorage();
-    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label });
+
+    // Toca o efeito sonoro imediatamente, move o foco primeiro e anuncia depois
+    // para evitar que a mudança de foco interrompa a leitura da live region no NVDA.
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label }, 200);
 
     setTimeout(() => {
       if (this.components.length === 0) {
@@ -151,7 +154,7 @@ export class AppComponent {
         'select, input, button:not(:disabled), [tabindex="0"]'
       );
       (targetFocus ?? document.getElementById('btn-dropdown-comandos'))?.focus();
-    }, 100);
+    }, 50);
   }
 
   moveComponentUp(index: number) {
