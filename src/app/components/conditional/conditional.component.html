@@ -1,4 +1,5 @@
-<div class="mb-2 col-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="conditional">
+<div class="mb-2 col-12 px-1 back" [ngClass]="back == true ? 'new-back' : ''" id="conditional"
+    [appBlockBoundary]="conditional?.condition?.value?.trim() ? ('ACCESSIBILITY.BLOCK_CONDITIONAL_WITH_EXPR' | translate:{ condition: conditional.condition.value.trim() }) : ('ACCESSIBILITY.BLOCK_CONDITIONAL' | translate)">
     <div class="row py-2 px-3 content align-items-start">
         <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
             <p class="mb-0 text-left" [id]="'conditional-cod-'+ index" tabindex="0">
@@ -57,11 +58,11 @@
                             <option [ngValue]="''" disabled *ngIf="op.value == ''">{{ "GENERAL.CONDITIONAL" | translate
                                 }}</option>
                             <optgroup [label]="'GENERAL.MATH' | translate">
-                                <option [ngValue]="'+'">+</option>
-                                <option [ngValue]="'-'">-</option>
-                                <option [ngValue]="'*'">*</option>
-                                <option [ngValue]="'/'">/</option>
-                                <option [ngValue]="'%'">%</option>
+                                <option [ngValue]="'+'" [title]="'ACCESSIBLE_MATH.ADD' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.ADD' | translate">+</option>
+                                <option [ngValue]="'-'" [title]="'ACCESSIBLE_MATH.SUBTRACT' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.SUBTRACT' | translate">-</option>
+                                <option [ngValue]="'*'" [title]="'GENERAL.MULTPLICATION' | translate" [attr.aria-label]="'GENERAL.MULTPLICATION' | translate">*</option>
+                                <option [ngValue]="'/'" [title]="'ACCESSIBLE_MATH.DIVIDE' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.DIVIDE' | translate">/</option>
+                                <option [ngValue]="'%'" [title]="'GENERAL.MODULO' | translate" [attr.aria-label]="'GENERAL.MODULO' | translate">%</option>
                             </optgroup>
                             <optgroup [label]="'GENERAL.LOGIC' | translate">
                                 <option [ngValue]="'E'">E</option>
@@ -118,6 +119,90 @@
                         (click)="clear()"><i class="bi bi-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
+
+            <div class="d-flex flex-column col-12 conditional mt-2">
+                <div class="row d-flex flex-wrap zindex">
+                    <div class="row" *ngFor="let component of conditional.condition.components; let i = index;">
+                        <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [writer]="component.value" [components]="conditional.condition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('condition', $event)"
+                            (moveDown)="moveNestedComponentDown('condition', $event)"
+                            (change)="setStorage()">
+                        </app-write>
+
+                        <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [operator]="component.value" [components]="conditional.condition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('condition', $event)"
+                            (moveDown)="moveNestedComponentDown('condition', $event)"
+                            (change)="setStorage()">
+                        </app-operator>
+
+                        <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [conditional]="component.value" [components]="conditional.condition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('condition', $event)"
+                            (moveDown)="moveNestedComponentDown('condition', $event)"
+                            (change)="setStorage()">
+                        </app-conditional>
+
+                        <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
+                            [components]="conditional.condition.components" [variables]="variables"
+                            (remove)="removeComponent(conditional.condition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('condition', $event)"
+                            (moveDown)="moveNestedComponentDown('condition', $event)"
+                            (change)="setStorage()">
+                        </app-for>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center my-2">
+                    <div class="d-flex justify-content-center align-items-center gap-1">
+                        <span class="rigth" tabindex="0">{{'GENERAL.ELSE_IF' | translate }}</span>
+
+                        <app-command-button [mode]="'inline'" [variant]="'add-block'" [title]="'COMANDS.ADD_IN_ELSE'"
+                            [hasVariables]="false" [components]="conditional.nocondition.components" [variables]="variables"
+                            [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
+                    </div>
+                </div>
+
+                <div class="row d-flex flex-wrap zindex">
+                    <div class="row" *ngFor="let component of conditional.nocondition.components; let i = index;">
+                        <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [writer]="component.value" [components]="conditional.nocondition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                            (moveDown)="moveNestedComponentDown('nocondition', $event)"
+                            (change)="setStorage()">
+                        </app-write>
+
+                        <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [operator]="component.value" [components]="conditional.nocondition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                            (moveDown)="moveNestedComponentDown('nocondition', $event)"
+                            (change)="setStorage()">
+                        </app-operator>
+
+                        <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
+                            [conditional]="component.value" [components]="conditional.nocondition.components"
+                            [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                            (moveDown)="moveNestedComponentDown('nocondition', $event)"
+                            (change)="setStorage()">
+                        </app-conditional>
+
+                        <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
+                            [components]="conditional.nocondition.components" [variables]="variables"
+                            (remove)="removeComponent(conditional.nocondition.components, $event)"
+                            (moveUp)="moveNestedComponentUp('nocondition', $event)"
+                            (moveDown)="moveNestedComponentDown('nocondition', $event)"
+                            (change)="setStorage()">
+                        </app-for>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-12 col-lg-3 py-1">
@@ -126,7 +211,7 @@
                     [contextLabel]="'COMANDS.BUTTON.IF' | translate"
                     (moveUp)="moveUp.emit($event)" (moveDown)="moveDown.emit($event)">
                 </app-block-reorder>
-                <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'Comandos'"
+                <app-command-button *ngIf="hasToggle" [mode]="'inline'" [text]="false" [title]="'COMANDS.TITLE'"
                     [components]="components" [variables]="variables" (change)="setStorage()"></app-command-button>
                 <button class="btn btn-transparent" (click)="toggleHidden()"
                     [attr.aria-label]="isHidden ? ('GENERAL.READ_CODE' | translate) : ('GENERAL.READ_EDIT' | translate)"
@@ -138,90 +223,6 @@
                 <button class="btn btn-transparent text-danger pr-2" (click)="removeConditional()"
                     [attr.aria-label]="conditional?.condition?.value?.trim() ? ('ACCESSIBILITY.DELETE_CONDITIONAL_WITH_EXPR' | translate:{ condition: conditional.condition.value.trim() }) : ('ACCESSIBILITY.DELETE_CONDITIONAL' | translate)"
                     [title]="conditional?.condition?.value?.trim() ? ('ACCESSIBILITY.DELETE_CONDITIONAL_WITH_EXPR' | translate:{ condition: conditional.condition.value.trim() }) : ('ACCESSIBILITY.DELETE_CONDITIONAL' | translate)"><span aria-hidden="true">X</span></button>
-            </div>
-        </div>
-
-        <div *ngIf="isHidden" class="d-flex flex-column col-12 col-lg-12 conditional mt-2">
-            <div class="row d-flex flex-wrap zindex">
-                <div class="row" *ngFor="let component of conditional.condition.components; let i = index;">
-                    <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [writer]="component.value" [components]="conditional.condition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('condition', $event)"
-                        (moveDown)="moveNestedComponentDown('condition', $event)"
-                        (change)="setStorage()">
-                    </app-write>
-
-                    <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [operator]="component.value" [components]="conditional.condition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('condition', $event)"
-                        (moveDown)="moveNestedComponentDown('condition', $event)"
-                        (change)="setStorage()">
-                    </app-operator>
-
-                    <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [conditional]="component.value" [components]="conditional.condition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.condition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('condition', $event)"
-                        (moveDown)="moveNestedComponentDown('condition', $event)"
-                        (change)="setStorage()">
-                    </app-conditional>
-
-                    <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
-                        [components]="conditional.condition.components" [variables]="variables"
-                        (remove)="removeComponent(conditional.condition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('condition', $event)"
-                        (moveDown)="moveNestedComponentDown('condition', $event)"
-                        (change)="setStorage()">
-                    </app-for>
-                </div>
-            </div>
-
-            <div class="d-flex flex-wrap align-items-center my-2">
-                <div class="d-flex justify-content-center align-items-center gap-1">
-                    <span class="rigth" tabindex="0">{{'GENERAL.ELSE_IF' | translate }}</span>
-
-                    <app-command-button [mode]="'inline'" [variant]="'add-block'" [title]="'COMANDS.ADD_IN_ELSE'"
-                        [hasVariables]="false" [components]="conditional.nocondition.components" [variables]="variables"
-                        [text]="false" [iconComands]="false" (change)="setStorage()"></app-command-button>
-                </div>
-            </div>
-
-            <div class="row d-flex flex-wrap zindex">
-                <div class="row" *ngFor="let component of conditional.nocondition.components; let i = index;">
-                    <app-write *ngIf="isWriter(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [writer]="component.value" [components]="conditional.nocondition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
-                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
-                        (change)="setStorage()">
-                    </app-write>
-
-                    <app-operator *ngIf="isOperator(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [operator]="component.value" [components]="conditional.nocondition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
-                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
-                        (change)="setStorage()">
-                    </app-operator>
-
-                    <app-conditional *ngIf="isConditional(component)" [back]="true" [index]="i" [hasToggle]="false"
-                        [conditional]="component.value" [components]="conditional.nocondition.components"
-                        [variables]="variables" (remove)="removeComponent(conditional.nocondition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
-                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
-                        (change)="setStorage()">
-                    </app-conditional>
-
-                    <app-for *ngIf="isFor(component)" [back]="true" [index]="i" [for]="component.value"
-                        [components]="conditional.nocondition.components" [variables]="variables"
-                        (remove)="removeComponent(conditional.nocondition.components, $event)"
-                        (moveUp)="moveNestedComponentUp('nocondition', $event)"
-                        (moveDown)="moveNestedComponentDown('nocondition', $event)"
-                        (change)="setStorage()">
-                    </app-for>
-                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output, HostListener, ElementRef } from '@angular/core';
+import { AudioFeedbackService } from 'src/app/core/services/audio-feedback.service';
 import { TypesEnum } from 'src/app/enums/types.enum';
 import { focusFirstDropdownItem } from 'src/app/utils/dropdown-focus.utils';
 import { generateNextVariableName } from 'src/app/utils/reorder.utils';
@@ -18,7 +19,7 @@ export class CommandButtonComponent implements OnInit {
   @Input("hasVariables") hasVariables: boolean = true;
   @Input("iconComands") iconComands: boolean = true;
   @Input("variant") variant: 'default' | 'add-block' = 'default';
-  @Input("title") title: any;
+  @Input("title") title: string = '';
   @Input("components") components: any[] = [];
   @Input("variables") variables: any[] = [];
   @Input("writers") writers: any[] = [];
@@ -34,7 +35,10 @@ export class CommandButtonComponent implements OnInit {
       : `btn-dropdown-comandos-${this.instanceId}`;
   }
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(
+    private elementRef: ElementRef,
+    @Optional() private audioFeedback?: AudioFeedbackService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -60,6 +64,7 @@ export class CommandButtonComponent implements OnInit {
     this.components.push(component);
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
 
     setTimeout(() => {
       document.getElementById("variable-type-" + (this.components.length - 1))?.focus();
@@ -80,6 +85,7 @@ export class CommandButtonComponent implements OnInit {
     this.components.push(component);
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
 
     setTimeout(() => {
       document.getElementById("write-type-" + (this.components.length - 1))?.focus();
@@ -100,6 +106,7 @@ export class CommandButtonComponent implements OnInit {
     this.components.push(component);
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
 
     setTimeout(() => {
       document.getElementById("select-var-" + (this.components.length - 1))?.focus();
@@ -125,6 +132,7 @@ export class CommandButtonComponent implements OnInit {
     this.components.push(component);
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
 
     setTimeout(() => {
       document.getElementById("button-op-" + (this.components.length - 1))?.focus();
@@ -152,6 +160,7 @@ export class CommandButtonComponent implements OnInit {
     this.components.push(component);
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
 
     setTimeout(() => {
       document.getElementById("for-select-" + (this.components.length - 1))?.focus();

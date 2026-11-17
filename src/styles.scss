@@ -84,9 +84,14 @@
 }
 
 .btn-transparent:focus,
-.btn-transparent.focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%);
+.btn-transparent.focus,
+.btn-transparent:focus-visible,
+.trash:focus,
+.trash:focus-visible {
+    outline: 2px solid #005fcc !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%) !important;
+    border-radius: 4px;
 }
 
 .bi-lock-fill::before,

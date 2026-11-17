@@ -1,4 +1,5 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output } from '@angular/core';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 
 @Component({
   selector: 'app-block-reorder',
@@ -17,7 +18,10 @@ export class BlockReorderComponent {
   @Output() moveUp = new EventEmitter<number>();
   @Output() moveDown = new EventEmitter<number>();
 
-  constructor(private elementRef: ElementRef<HTMLElement>) { }
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    @Optional() private audioFeedback?: AudioFeedbackService
+  ) { }
 
   get isFirst(): boolean {
     return this.index <= 0;
@@ -34,6 +38,11 @@ export class BlockReorderComponent {
     const targetIndex = this.index - 1;
     const listContainer = this.getListContainer();
     this.moveUp.emit(this.index);
+    this.audioFeedback?.notifyAction('moveUp', 'ACCESSIBILITY.MOVED_TO_POSITION', {
+      label: this.contextLabel,
+      position: targetIndex + 1,
+      total: this.total
+    });
     this.focusMovedButton(listContainer, targetIndex, targetIndex === 0 ? 'down' : 'up');
   }
 
@@ -44,6 +53,11 @@ export class BlockReorderComponent {
     const targetIndex = this.index + 1;
     const listContainer = this.getListContainer();
     this.moveDown.emit(this.index);
+    this.audioFeedback?.notifyAction('moveDown', 'ACCESSIBILITY.MOVED_TO_POSITION', {
+      label: this.contextLabel,
+      position: targetIndex + 1,
+      total: this.total
+    });
     this.focusMovedButton(
       listContainer,
       targetIndex,

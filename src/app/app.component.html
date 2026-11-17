@@ -4,6 +4,7 @@
     <a href="#btn-gravar-atividade" class="visually-hidden-focusable">Saltar para Gravar Atividade</a>
     <a href="#btn-dropdown-comandos" class="visually-hidden-focusable">Saltar para Lista de Comandos</a>
   </nav>
+  <div id="block-boundary-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <div class="app-container d-flex justify-content-center">
     <div class="back-blue">
       <header class="d-flex align-items-center py-4 px-4">
@@ -43,6 +44,13 @@
 
         </nav>
         <div class="d-flex ms-auto align-items-center gap-2 gap-md-3">
+          <button type="button" id="btn-toggle-sound" class="btn btn-outline-light d-flex align-items-center gap-2"
+            (click)="toggleSound()"
+            [attr.aria-pressed]="isSoundEnabled"
+            [attr.aria-label]="(isSoundEnabled ? 'ACCESSIBILITY.SOUND_DISABLE' : 'ACCESSIBILITY.SOUND_ENABLE') | translate"
+            [title]="(isSoundEnabled ? 'ACCESSIBILITY.SOUND_DISABLE' : 'ACCESSIBILITY.SOUND_ENABLE') | translate">
+            <i class="bi" [ngClass]="isSoundEnabled ? 'bi-volume-up-fill' : 'bi-volume-mute-fill'" aria-hidden="true"></i>
+          </button>
           <div ngbDropdown #langDropdown="ngbDropdown" (openChange)="onLanguageDropdownOpenChange($event)" class="d-inline-block">
             <button class="btn btn-outline-light d-flex align-items-center gap-2" id="dropdownLanguage"
               ngbDropdownToggle aria-haspopup="menu"

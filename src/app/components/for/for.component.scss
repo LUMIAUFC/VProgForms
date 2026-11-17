@@ -53,14 +53,6 @@ input{
     }
 }
 
-.btn {
-    &:focus {
-        border-color: var(--bs-btn-hover-border-color);
-        outline: 0;
-        box-shadow: var(--bs-btn-focus-box-shadow);
-    }
-}
-
 @media screen and (max-width: 576px) {
     input {
         max-width: 100%;

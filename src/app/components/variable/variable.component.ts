@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Optional, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
 import { NgSelectComponent } from '@ng-select/ng-select/public-api';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 import { normalizeNumericFallback } from '../../utils/reorder.utils';
 
 @Component({
@@ -26,7 +27,7 @@ export class VariableComponent implements OnInit {
   isHidden: boolean = true;
   private lastCommittedName: string = '';
 
-  constructor() { }
+  constructor(@Optional() private audioFeedback?: AudioFeedbackService) { }
 
   ngOnInit(): void {
     this.lastCommittedName = String(this.variable?.name ?? '').trim();
@@ -66,6 +67,7 @@ export class VariableComponent implements OnInit {
   
   toggleHidden(){
     this.isHidden = !this.isHidden;
+    this.audioFeedback?.playEffect('toggle');
 
     if(!this.isHidden){
       setTimeout(() => {

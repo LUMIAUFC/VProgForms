@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 import { AccessibleMathPipe } from '../../pipes/accessible-math.pipe';
 import { TypesEnum } from 'src/app/enums/types.enum';
 import { removeConditionalTermAt } from '../../utils/expression-terms.utils';
 import { moveItemDown, moveItemUp } from '../../utils/reorder.utils';
+import { resolveBlockLabel } from '../../utils/sound-effects.utils';
 
 @Component({
   selector: 'app-conditional',
@@ -38,11 +40,15 @@ export class ConditionalComponent implements OnInit {
   @Output("moveUp") moveUp = new EventEmitter<number>();
   @Output("moveDown") moveDown = new EventEmitter<number>();
 
-  constructor(public translate: TranslateService, private accMath: AccessibleMathPipe) { }
+  constructor(
+    public translate: TranslateService,
+    private accMath: AccessibleMathPipe,
+    @Optional() private audioFeedback?: AudioFeedbackService
+  ) { }
 
   ngOnInit(): void {
     if (!this.conditional.conditionals) {
-      this.clear();
+      this.resetConditionTerms();
     }
   }
 
@@ -67,8 +73,10 @@ export class ConditionalComponent implements OnInit {
   }
 
   removeComponent(components: any, index: number) {
+    const label = resolveBlockLabel(components[index], this.translate.instant('COMANDS.TITLE'));
     components.splice(index, 1);
     this.setStorage();
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label });
   }
 
   moveNestedComponentUp(branch: 'condition' | 'nocondition', index: number): void {
@@ -113,6 +121,7 @@ export class ConditionalComponent implements OnInit {
     });
 
     this.setStorage();
+    this.audioFeedback?.playEffect('add');
   }
 
   changeInputValue(element: any) {
@@ -136,6 +145,7 @@ export class ConditionalComponent implements OnInit {
 
   toggleHidden() {
     this.isHidden = !this.isHidden;
+    this.audioFeedback?.playEffect('toggle');
 
     if (!this.isHidden) {
       this.formatCommands();
@@ -199,11 +209,16 @@ export class ConditionalComponent implements OnInit {
   }
 
   removeConditionTerm(termIndex: number) {
+    const prevLength = this.conditional.conditionals.length;
     this.conditional.conditionals = removeConditionalTermAt(
       this.conditional.conditionals,
       termIndex
     );
     this.changeValue();
+
+    if (this.conditional.conditionals.length < prevLength) {
+      this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED');
+    }
 
     const targetIndex = Math.max(
       0,
@@ -213,6 +228,11 @@ export class ConditionalComponent implements OnInit {
   }
 
   clear() {
+    this.resetConditionTerms();
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.CONDITION_CLEARED');
+  }
+
+  private resetConditionTerms(): void {
     this.conditional.conditionals = [];
 
     this.conditional.conditionals.push({

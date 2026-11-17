@@ -1,4 +1,5 @@
-<div class="mb-2 d-flex flex-wrap col-12 align-items-center px-2 py-1 back" [id]="'variable-' + index">
+<div class="mb-2 d-flex flex-wrap col-12 align-items-center px-2 py-1 back" [id]="'variable-' + index"
+    [appBlockBoundary]="variable?.name ? ('ACCESSIBILITY.BLOCK_VARIABLE_NAMED' | translate:{ name: variable.name }) : ('ACCESSIBILITY.BLOCK_VARIABLE' | translate)">
     <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
         <p class="mb-0" [id]="'variable-cod-' + index" tabindex="0">
             <span *ngIf="variable.type == 'INTEGER'">{{ "VARIABLE.INT" | translate }} </span>

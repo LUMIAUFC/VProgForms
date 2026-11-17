@@ -1,12 +1,13 @@
-import { Component, ElementRef, HostListener, QueryList, ViewChildren, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, Optional, QueryList, ViewChildren } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LogService } from './features/logs/services/log.service';
 import { LogExportService } from './features/logs/services/log-export.service';
-import { Log } from './features/logs/models/log.model';
+import { AudioFeedbackService } from './core/services/audio-feedback.service';
 import { TypesEnum } from './enums/types.enum';
 import { Execucao } from './features/logs/models/execucao.model';
 import { mapVcatError, validateProgram } from './utils/program-validator';
 import { focusFirstDropdownItem } from './utils/dropdown-focus.utils';
+import { resolveBlockLabel } from './utils/sound-effects.utils';
 import {
   getVariablesBeforeIndex,
   moveItemDown,
@@ -36,8 +37,21 @@ export class AppComponent {
 
   @ViewChildren('input') inputs!: QueryList<ElementRef>;
 
-  constructor(public translate: TranslateService, private logService: LogService, private logExportService: LogExportService) {
+  constructor(
+    public translate: TranslateService,
+    private logService: LogService,
+    private logExportService: LogExportService,
+    @Optional() public audioFeedback?: AudioFeedbackService
+  ) {
 
+  }
+
+  get isSoundEnabled(): boolean {
+    return this.audioFeedback ? this.audioFeedback.isSoundEnabled : true;
+  }
+
+  toggleSound(): void {
+    this.audioFeedback?.toggleSound();
   }
 
   onLanguageDropdownOpenChange(isOpen: boolean): void {
@@ -120,8 +134,24 @@ export class AppComponent {
   }
 
   removeComponent(index: number) {
+    const removed = this.components[index];
+    const label = resolveBlockLabel(removed, this.translate.instant('COMANDS.TITLE'));
     this.components.splice(index, 1);
     this.setStorage();
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label });
+
+    setTimeout(() => {
+      if (this.components.length === 0) {
+        document.getElementById('btn-dropdown-comandos')?.focus();
+        return;
+      }
+      const targetIndex = Math.min(index, this.components.length - 1);
+      const blockContainers = document.querySelectorAll('.area-terminal-comandos-comandos > div');
+      const targetFocus = blockContainers[targetIndex]?.querySelector<HTMLElement>(
+        'select, input, button:not(:disabled), [tabindex="0"]'
+      );
+      (targetFocus ?? document.getElementById('btn-dropdown-comandos'))?.focus();
+    }, 100);
   }
 
   moveComponentUp(index: number) {
@@ -142,6 +172,10 @@ export class AppComponent {
   clear() {
     this.components = [];
     this.setStorage();
+    this.audioFeedback?.notifyAction('clearAll', 'ACCESSIBILITY.ALL_COMMANDS_CLEARED');
+    setTimeout(() => {
+      document.getElementById('btn-dropdown-comandos')?.focus();
+    }, 100);
   }
 
   setStorage() {
@@ -238,6 +272,7 @@ export class AppComponent {
       this.isRunning = true;
       this.clearTerminal();
       this.terminalOutput(msg, false);
+      this.audioFeedback?.playEffect('error');
       setTimeout(() => {
         document.getElementById('execution-alert')?.focus();
       }, 100);
@@ -285,6 +320,7 @@ export class AppComponent {
       // Ela devolve o estado final do programa (valores finais das variáveis declaradas dentro da função "inicio" ou no escopo global)
       // A classe Store em src/processor/store/store.ts descreve o parametro mas no contexto atual ele é totalmente irrelevante
       proc.interpretAST().then((_finalProgramState: any) => {
+        this.audioFeedback?.playEffect('success');
         this.registrarExecucaoLog(programSintax, executionOutput);
       }).catch((err: any) => {
         console.error(err);
@@ -292,6 +328,7 @@ export class AppComponent {
         this.executionAlertMessage = friendlyMessage;
         executionOutput += friendlyMessage + "\n";
         this.terminalOutput(friendlyMessage);
+        this.audioFeedback?.playEffect('error');
         this.registrarExecucaoLog(programSintax, executionOutput);
       });
     } catch (error: any) {
@@ -311,6 +348,7 @@ export class AppComponent {
       this.executionAlertMessage = friendlyMessage;
       executionOutput += friendlyMessage + "\n";
       this.terminalOutput(friendlyMessage);
+      this.audioFeedback?.playEffect('error');
       this.registrarExecucaoLog(programSintax, executionOutput);
       // a linha e coluna foi a estrategia pensada para poder associar o erro com o elemento visual que o gerou
       // uma vez que seria possivel associar seções do texto com o elemento que o gerou
@@ -319,7 +357,13 @@ export class AppComponent {
 
   private resolveVcatErrorMessage(error: unknown): string {
     const mapped = mapVcatError(error);
-    return mapped.rawMessage ?? this.translate.instant(mapped.messageKey);
+    if (!mapped.rawMessage) {
+      return this.translate.instant(mapped.messageKey);
+    }
+    const raw = mapped.rawMessage.trim();
+    const hasErrorPrefix = /^(erro|error)\s*:/i.test(raw);
+    const prefix = this.translate.instant('EXECUTION_ERROR.PREFIX');
+    return hasErrorPrefix ? raw : `${prefix}${raw}`;
   }
 
   terminalOutput(valor: any, shouldFocus: boolean = true) {
@@ -366,7 +410,7 @@ export class AppComponent {
     if (hasConsent !== 'true') {
       this.clearTerminal();
       this.showConsentModal = true;
-      setTimeout(() => { document.getElementById('title-terminal')?.focus(); }, 100);
+      setTimeout(() => { document.getElementById('terminal-consent-box')?.focus(); }, 100);
       return;
     }
 

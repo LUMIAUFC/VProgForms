@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 
 @Component({
   selector: 'app-write',
@@ -26,7 +27,7 @@ export class WriteComponent implements OnInit {
 
   idElement: any;
 
-  constructor() {
+  constructor(@Optional() private audioFeedback?: AudioFeedbackService) {
     
   }
 
@@ -49,6 +50,7 @@ export class WriteComponent implements OnInit {
 
   toggleHidden(){
     this.isHidden = !this.isHidden;
+    this.audioFeedback?.playEffect('toggle');
 
     if(!this.isHidden){
       setTimeout(() => {

@@ -1,7 +1,7 @@
 <div ngbDropdown #cmdDropdown="ngbDropdown" (openChange)="onDropdownOpenChange($event)" container="body" class="d-inline-block {{ mode }}" [class.add-block]="variant === 'add-block'">
     <button [attr.id]="buttonId" type="button"
         [ngClass]="variant === 'add-block' ? 'dropdown btn btn-primary btn-sm add-block-btn' : 'dropdown btn btn-primary p-3'"
-        ngbDropdownToggle aria-haspopup="menu" [title]="title | translate" [attr.aria-label]="title | translate">
+        ngbDropdownToggle aria-haspopup="menu" [attr.title]="title ? (title | translate) : null" [attr.aria-label]="(title || 'COMANDS.TITLE') | translate">
         <span *ngIf="variant === 'add-block'" class="bi bi-plus-lg" aria-hidden="true"></span>
         <span *ngIf="variant === 'add-block' && text2 == true" class="ms-1">{{ "COMANDS.TITLE2" | translate }}</span>
         <span *ngIf="variant !== 'add-block' && text == true && text2 == false">{{ "COMANDS.TITLE" | translate }}</span>

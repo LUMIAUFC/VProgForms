@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { CommandButtonComponent } from './command-button.component';
 
@@ -8,9 +10,9 @@ describe('CommandButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CommandButtonComponent ]
-    })
-    .compileComponents();
+      imports: [NgbModule, TranslateModule.forRoot()],
+      declarations: [CommandButtonComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +23,11 @@ describe('CommandButtonComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('não deve renderizar title="undefined" quando title não for informado', () => {
+    const button = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    expect(button.getAttribute('title')).toBeNull();
+    expect(button.getAttribute('aria-label')).toBe('COMANDS.TITLE');
   });
 });

@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 import { AccessibleMathPipe } from '../../pipes/accessible-math.pipe';
 import { TypesEnum } from 'src/app/enums/types.enum';
 import { moveItemDown, moveItemUp } from '../../utils/reorder.utils';
+import { resolveBlockLabel } from '../../utils/sound-effects.utils';
 
 @Component({
   selector: 'app-for',
@@ -41,7 +43,11 @@ export class ForComponent implements OnInit {
   @Output("moveUp") moveUp = new EventEmitter<number>();
   @Output("moveDown") moveDown = new EventEmitter<number>();
 
-  constructor(public translate: TranslateService, private accMath: AccessibleMathPipe) { }
+  constructor(
+    public translate: TranslateService,
+    private accMath: AccessibleMathPipe,
+    @Optional() private audioFeedback?: AudioFeedbackService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -67,8 +73,10 @@ export class ForComponent implements OnInit {
   }
 
   removeComponent(components: any, index: number) {
+    const label = resolveBlockLabel(components[index], this.translate.instant('COMANDS.TITLE'));
     components.splice(index, 1);
     this.setStorage();
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.BLOCK_REMOVED', { label });
   }
 
   moveNestedComponentUp(index: number): void {
@@ -107,6 +115,7 @@ export class ForComponent implements OnInit {
 
   toggleHidden() {
     this.isHidden = !this.isHidden;
+    this.audioFeedback?.playEffect('toggle');
 
     if (!this.isHidden) {
       this.formatCommands();

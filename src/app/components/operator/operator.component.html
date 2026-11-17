@@ -1,4 +1,5 @@
-<div class="mb-2 col-12 px-1 back write" [ngClass]="back == true ? 'new-back' : ''">
+<div class="mb-2 col-12 px-1 back write" [ngClass]="back == true ? 'new-back' : ''"
+    [appBlockBoundary]="operator?.reference ? ('ACCESSIBILITY.BLOCK_OPERATOR_NAMED' | translate:{ name: operator.reference }) : ('ACCESSIBILITY.BLOCK_OPERATOR' | translate)">
     <div class="row py-2 px-3 content align-items-center">
         <div *ngIf="!isHidden" class="col-12 col-lg-9 d-flex justify-content-start align-items-center py-1">
             <p class="mb-0" [id]="'operator-cod-'+ index" tabindex="0">
@@ -17,7 +18,7 @@
                     <option *ngFor="let v of variables" [ngValue]="v.value">{{v.value.name}}</option>
                 </select>
 
-                <span class="rigth me-2" tabindex="0">{{ "GENERAL.RECEIVE" | translate }}</span>
+                <span [id]="'operator-receive-' + index" class="rigth me-2" tabindex="0">{{ "GENERAL.RECEIVE" | translate }}</span>
             </div>
 
             <div class="d-flex flex-wrap align-items-center gap-2 mb-2" *ngFor="let op of operator.operators; let i = index">
@@ -49,7 +50,7 @@
                     <input class="form-control" id="operator-op-{{index}}-{{op.index}}" *ngIf="operator.currentVariable.type != 'BOOLEAN'"
                         [(ngModel)]="op.value" (keyup)="changeInputValue(op)" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" />
 
-                    <select class="form-select" *ngIf="operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" *ngIf="operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
                         <option disabled [ngValue]="''">{{ "GENERAL.SELECT_VALUE" | translate }}</option>
                         <option [ngValue]="'verdadeiro'">{{ "GENERAL.TRUE" | translate }}</option>
                         <option [ngValue]="'falso'">{{ "GENERAL.FALSE" | translate }}</option>
@@ -57,20 +58,14 @@
                 </div>
 
                 <div class="op-col" *ngIf="op.type == 'OPERATOR'">
-                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()"
+                        [title]="getOperatorLabelKey(op.value) | translate"
+                        [attr.aria-label]="getOperatorLabelKey(op.value) | translate">
                         <option [ngValue]="''" disabled *ngIf="op.value == ''">{{ "GENERAL.SELECT_OPERATOR" | translate }}</option>
-                        <option [ngValue]="'+'">
-                            <span class="sr-only">&#43;</span>
-                        </option>
-                        <option [ngValue]="'-'">
-                            <span class="sr-only">&minus;</span>
-                        </option>
-                        <option [ngValue]="'*'">
-                            <span aria-hidden="true"><strong>&lowast;</strong></span>
-                        </option>
-                        <option [ngValue]="'/'">
-                            <span class="sr-only">&divide;</span>
-                        </option>
+                        <option [ngValue]="'+'" [title]="'ACCESSIBLE_MATH.ADD' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.ADD' | translate">+</option>
+                        <option [ngValue]="'-'" [title]="'ACCESSIBLE_MATH.SUBTRACT' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.SUBTRACT' | translate">-</option>
+                        <option [ngValue]="'*'" [title]="'GENERAL.MULTPLICATION' | translate" [attr.aria-label]="'GENERAL.MULTPLICATION' | translate">*</option>
+                        <option [ngValue]="'/'" [title]="'ACCESSIBLE_MATH.DIVIDE' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.DIVIDE' | translate">/</option>
                     </select>
                 </div>
 
@@ -132,7 +127,7 @@
                 <app-command-button 
                     [mode]="'inline'" 
                     [text]="false" 
-                    [title]="'Comandos'"
+                    [title]="'COMANDS.TITLE'"
                     [components]="components" 
                     [variables]="variables"
                     (change)="setStorage()"

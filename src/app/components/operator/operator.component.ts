@@ -1,4 +1,5 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Optional, Output } from '@angular/core';
+import { AudioFeedbackService } from '../../core/services/audio-feedback.service';
 import { focusFirstDropdownItem } from '../../utils/dropdown-focus.utils';
 import { removeOperatorTermAt } from '../../utils/expression-terms.utils';
 import { moveIndexedItemDown, moveIndexedItemUp } from '../../utils/reorder.utils';
@@ -24,12 +25,19 @@ export class OperatorComponent implements OnInit {
 
   isHidden: boolean = true;
 
+  private static readonly OPERATOR_LABEL_KEYS: Readonly<Record<string, string>> = {
+    '+': 'ACCESSIBLE_MATH.ADD',
+    '-': 'ACCESSIBLE_MATH.SUBTRACT',
+    '*': 'GENERAL.MULTPLICATION',
+    '/': 'ACCESSIBLE_MATH.DIVIDE'
+  };
+
   @Output("remove") remove = new EventEmitter();
   @Output("change") change = new EventEmitter();
   @Output("moveUp") moveUp = new EventEmitter<number>();
   @Output("moveDown") moveDown = new EventEmitter<number>();
 
-  constructor() { }
+  constructor(@Optional() private audioFeedback?: AudioFeedbackService) { }
 
   ngOnInit(): void {
   }
@@ -48,13 +56,16 @@ export class OperatorComponent implements OnInit {
       value: value,
     });
     this.changeValue();
+    this.audioFeedback?.playEffect('add');
 
     this.focusOperator(this.operator.operators.length - 1);
   }
 
   focusOperator(indexOp: any) {
     setTimeout(() => {
-      let operatorElement = document.getElementById(`operator-op-${this.index}-${indexOp}`);
+      const operatorElement =
+        document.getElementById(`operator-op-${this.index}-${indexOp}`) ??
+        document.getElementById(`operator-op1-${this.index}-${indexOp}`);
 
       if (operatorElement) {
         operatorElement.focus();
@@ -65,19 +76,37 @@ export class OperatorComponent implements OnInit {
   clearOperator(index: number) {
     this.operator.operators = removeOperatorTermAt(this.operator.operators, index);
     this.changeValue();
+    this.audioFeedback?.notifyAction('delete', 'ACCESSIBILITY.TERM_REMOVED');
 
     if (this.operator.operators.length > 0) {
       const targetIndex = Math.min(index, this.operator.operators.length - 1);
       this.focusOperator(targetIndex);
+    } else {
+      setTimeout(() => {
+        const receiveElement =
+          document.getElementById(`operator-receive-${this.index}`) ??
+          document.getElementById(`select-var-${this.index}`);
+        receiveElement?.focus();
+      }, 200);
     }
+  }
+
+  getOperatorLabelKey(opValue: string): string {
+    return OperatorComponent.OPERATOR_LABEL_KEYS[opValue] ?? 'GENERAL.SELECT_OPERATOR';
   }
 
   moveOperatorTermUp(index: number): void {
     if (index <= 0) {
       return;
     }
+    const movedTerm = this.operator.operators[index]?.value || String(index + 1);
     this.operator.operators = moveIndexedItemUp(this.operator.operators, index);
     this.changeValue();
+    this.audioFeedback?.notifyAction('moveUp', 'ACCESSIBILITY.TERM_MOVED_TO_POSITION', {
+      term: movedTerm,
+      position: index,
+      total: this.operator.operators.length
+    });
     this.focusOperator(index - 1);
   }
 
@@ -85,8 +114,14 @@ export class OperatorComponent implements OnInit {
     if (!Array.isArray(this.operator.operators) || index >= this.operator.operators.length - 1) {
       return;
     }
+    const movedTerm = this.operator.operators[index]?.value || String(index + 1);
     this.operator.operators = moveIndexedItemDown(this.operator.operators, index);
     this.changeValue();
+    this.audioFeedback?.notifyAction('moveDown', 'ACCESSIBILITY.TERM_MOVED_TO_POSITION', {
+      term: movedTerm,
+      position: index + 2,
+      total: this.operator.operators.length
+    });
     this.focusOperator(index + 1);
   }
 
@@ -136,6 +171,7 @@ export class OperatorComponent implements OnInit {
 
   toggleHidden() {
     this.isHidden = !this.isHidden;
+    this.audioFeedback?.playEffect('toggle');
 
     if (!this.isHidden) {
       setTimeout(() => {

@@ -11,32 +11,43 @@
         <div id="ivprog-term" class="bash-body ivprog-term-div">
             <div id="ivprog-terminal-inputdiv">
 
-                <div *ngIf="showConsent" id="terminal-consent-box" tabindex="-1" style="color: white; outline: none;">
-                    <h3>{{ 'CONSENT_MODAL.TITLE' | translate }}</h3>
-                    <p>{{ 'CONSENT_MODAL.DESCRIPTION' | translate }}</p>
+                <div *ngIf="showConsent" id="terminal-consent-box" role="region" tabindex="0"
+                    aria-labelledby="consent-modal-title" aria-describedby="consent-modal-description"
+                    style="color: white; outline: none;">
+                    <h3 id="consent-modal-title">{{ 'CONSENT_MODAL.TITLE' | translate }}</h3>
+                    <p id="consent-modal-description">{{ 'CONSENT_MODAL.DESCRIPTION' | translate }}</p>
                     <div class="modal-actions mt-3">
-                        <button class="btn btn-success me-2" (click)="acceptConsent.emit()">Prosseguir</button>
-                        <button class="btn btn-danger" style="background-color: #b91c1c; border-color: #b91c1c;"
-                            (click)="cancelConsent.emit()">Cancelar</button>
+                        <button id="btn-consent-accept" class="btn btn-success me-2"
+                            [attr.aria-label]="'CONSENT_MODAL.PROCEED_ARIA' | translate"
+                            [title]="'CONSENT_MODAL.PROCEED_ARIA' | translate"
+                            (click)="acceptConsent.emit()">{{ 'CONSENT_MODAL.PROCEED' | translate }}</button>
+                        <button id="btn-consent-cancel" class="btn btn-danger" style="background-color: #b91c1c; border-color: #b91c1c;"
+                            [attr.aria-label]="'CONSENT_MODAL.CANCEL_ARIA' | translate"
+                            [title]="'CONSENT_MODAL.CANCEL_ARIA' | translate"
+                            (click)="cancelConsent.emit()">{{ 'CONSENT_MODAL.CANCEL' | translate }}</button>
                     </div>
                 </div>
 
-                <div *ngIf="isRecordingLog && !isRunning && !showConsent && !isDownloadReady" id="log-recording-message" tabindex="-1" aria-live="assertive"
+                <div *ngIf="isRecordingLog && !isRunning && !showConsent && !isDownloadReady" id="log-recording-message" tabindex="0"
                     class="recording-log-container" style="outline: none;">
-                    <p class="log-ready">[LOG] Monitoramento pronto. Aguardando interações...</p>
-                    <p class="log-recording">[LOG] Gravando atividade<span class="loading-dots">...</span></p>
+                    <p class="log-ready">{{ 'TERMINAL.LOG_READY' | translate }}</p>
+                    <p class="log-recording">{{ 'TERMINAL.LOG_RECORDING' | translate }}<span class="loading-dots" aria-hidden="true">...</span></p>
                     <p class="log-description">
-                        A gravação está em andamento. Todas as interações estão sendo registradas.<br>
-                        Para encerrar a gravação, clique no botão "Encerrar Gravação".
+                        {{ 'TERMINAL.LOG_DESCRIPTION_1' | translate }}<br>
+                        {{ 'TERMINAL.LOG_DESCRIPTION_2' | translate }}
                     </p>
                 </div>
 
                 <div *ngIf="isDownloadReady" id="terminal-download-box" tabindex="-1"
                     style="color: white; outline: none; padding: 10px;" class="d-flex flex-column align-items-start">
-                    <span style="color: #FFEB3B; font-weight: bold; margin-bottom: 12px;">Gravação finalizada.</span>
+                    <span id="recording-finished-msg" style="color: #FFEB3B; font-weight: bold; margin-bottom: 12px;">
+                        {{ 'TERMINAL.RECORDING_FINISHED' | translate }}
+                    </span>
                     <button id="btn-download-log" class="btn btn-warning btn-download-log"
+                        [attr.aria-label]="'TERMINAL.DOWNLOAD_LOG_ARIA' | translate"
+                        [attr.aria-describedby]="'recording-finished-msg'"
                         (click)="downloadAction.emit()">
-                        <span class="bi bi-download me-2"></span> Baixar relatório da atividade
+                        <span class="bi bi-download me-2" aria-hidden="true"></span> {{ 'TERMINAL.DOWNLOAD_LOG' | translate }}
                     </button>
                 </div>
 
