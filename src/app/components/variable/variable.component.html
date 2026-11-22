@@ -16,6 +16,7 @@
     <div *ngIf="isHidden" class="row p-2 variable-item col-12 col-lg-9 g-2 align-items-center">
         <div class="col-12 col-sm-6 col-md-3">
             <select [id]="'variable-type-' + index" name="tipo" class="form-control" [title]="'VARIABLE.TYPE' | translate"
+                [attr.aria-label]="'VARIABLE.TYPE' | translate"
                 (change)="changeType()" [(ngModel)]="variable.type">
                 <option value="INTEGER">{{ "VARIABLE.INT" | translate }}</option>
                 <option value="DOUBLE">{{ "VARIABLE.REAL" | translate }}</option>
@@ -41,7 +42,10 @@
         </div>
 
         <div class="col-12 col-sm-10 col-md-4" *ngIf="variable.type == 'BOOLEAN'">
-            <select id="variable-value-{{index}}" name="tipo" class="form-control" [title]="'VARIABLE.TYPE' | translate" [(ngModel)]="variable.value">
+            <select id="variable-value-{{index}}" name="tipo" class="form-control"
+                [title]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name"
+                [attr.aria-label]="('GENERAL.VALUE_OF' | translate) + ' ' + variable.name"
+                [(ngModel)]="variable.value">
                 <option [ngValue]="'verdadeiro'">{{ "GENERAL.TRUE" | translate }}</option>
                 <option [ngValue]="'falso'">{{ "GENERAL.FALSE" | translate }}</option>
             </select>

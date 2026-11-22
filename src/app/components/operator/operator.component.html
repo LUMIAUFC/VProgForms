@@ -12,7 +12,8 @@
 
         <div *ngIf="isHidden" class="col-12 col-lg-9 operator py-1">
             <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                <select [id]="'select-var-' + index" [(ngModel)]="operator.currentVariable" [compareWith]="compareFn" class="form-select select-main-var" (change)="changeVariable()">
+                <select [id]="'select-var-' + index" [(ngModel)]="operator.currentVariable" [compareWith]="compareFn" class="form-select select-main-var" (change)="changeVariable()"
+                    [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
                     <option *ngIf="variables.length && operator.name ==''" disabled [ngValue]="undefined">{{ "GENERAL.SELECT_VARIABLE" | translate }} </option>
                     <option *ngIf="!variables.length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                     <option *ngFor="let v of variables" [ngValue]="v.value">{{v.value.name}}</option>
@@ -23,7 +24,8 @@
 
             <div class="d-flex flex-wrap align-items-center gap-2 mb-2" *ngFor="let op of operator.operators; let i = index">
                 <div class="op-col" *ngIf="op.type == 'PARENTHESIS'">
-                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()"
+                        [title]="'GENERAL.SELECT_PAR' | translate" [attr.aria-label]="'GENERAL.SELECT_PAR' | translate">
                         <option disabled [ngValue]="''">{{ "GENERAL.SELECT_PAR" | translate }}</option>
                         <option [ngValue]="'('" [title]="'GENERAL.OPEN_PARENTHESES' | translate">(</option>
                         <option [ngValue]="')'" [title]="'GENERAL.CLOSE_PARENTHESES' | translate">)</option>
@@ -31,7 +33,8 @@
                 </div>
 
                 <div class="op-col" *ngIf="op.type == 'ATTRIBUTE' || op.type == 'VARIABLE' || op.type == 'VALUE'">
-                    <select class="form-select" id="operator-op1-{{index}}-{{op.index}}" [(ngModel)]="op.type" (change)="clearValue(op)">
+                    <select class="form-select" id="operator-op1-{{index}}-{{op.index}}" [(ngModel)]="op.type" (change)="clearValue(op)"
+                        [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
                         <option [ngValue]="'ATTRIBUTE'" disabled>{{ "GENERAL.SELECT" | translate }}</option>
                         <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
                         <option [ngValue]="'VALUE'">{{ "GENERAL.VALUE" | translate }}</option>
@@ -39,7 +42,8 @@
                 </div>
 
                 <div class="op-col" *ngIf="op.type == 'VARIABLE'">
-                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()"
+                        [title]="'GENERAL.SELECT_VARIABLE' | translate" [attr.aria-label]="'GENERAL.SELECT_VARIABLE' | translate">
                         <option *ngIf="getVariables().length && op.value == ''" disabled [ngValue]="''">{{ "GENERAL.SELECT_VARIABLE" | translate }}</option>
                         <option *ngIf="!getVariables().length" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
                         <option *ngFor="let v of getVariables()" [ngValue]="v.value.name">{{v.value.name}}</option>
@@ -48,9 +52,11 @@
 
                 <div class="op-col" *ngIf="op.type == 'VALUE'">
                     <input class="form-control" id="operator-op-{{index}}-{{op.index}}" *ngIf="operator.currentVariable.type != 'BOOLEAN'"
-                        [(ngModel)]="op.value" (keyup)="changeInputValue(op)" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate" />
+                        [(ngModel)]="op.value" (keyup)="changeInputValue(op)" type="text" [placeholder]="'GENERAL.DIGIT_VALUE' | translate"
+                        [title]="'GENERAL.DIGIT_VALUE' | translate" [attr.aria-label]="'GENERAL.DIGIT_VALUE' | translate" />
 
-                    <select class="form-select" *ngIf="operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()">
+                    <select class="form-select" *ngIf="operator.currentVariable.type == 'BOOLEAN'" id="operator-op-{{index}}-{{op.index}}" [(ngModel)]="op.value" (change)="changeValue()"
+                        [title]="'GENERAL.SELECT_VALUE' | translate" [attr.aria-label]="'GENERAL.SELECT_VALUE' | translate">
                         <option disabled [ngValue]="''">{{ "GENERAL.SELECT_VALUE" | translate }}</option>
                         <option [ngValue]="'verdadeiro'">{{ "GENERAL.TRUE" | translate }}</option>
                         <option [ngValue]="'falso'">{{ "GENERAL.FALSE" | translate }}</option>

@@ -130,12 +130,25 @@ export class ForComponent implements OnInit {
     }
   }
 
+  private formatStep(incrementType: string, incrementValue: string): string {
+    const signKey = incrementType === '-' ? 'ACCESSIBLE_MATH.SUBTRACT' : 'ACCESSIBLE_MATH.ADD';
+    const signLabel = this.translate.instant(signKey);
+    return `<span aria-hidden="true">${incrementType}${incrementValue}</span><span class="sr-only">${signLabel} ${incrementValue}</span>`;
+  }
+
+  private formatUntilKeyword(currentLang: string): string {
+    return currentLang == 'pt'
+      ? '<span aria-hidden="true">ate</span><span class="sr-only">até</span>'
+      : 'to';
+  }
+
   formatCommands() {
     const currentLang = this.translate.currentLang;
-    const incType = this.accMath.transform(this.for.incrementType);
-    this.commandsPlainText = `<p class="mb-0">${currentLang == 'pt' ? 'repita_para' : 'repeat_for'} ${this.for.variable} ${currentLang == 'pt' ? 'de' : 'from'} ${this.for.startValue} <span tabindex="-1">${currentLang == 'pt' ? 'ate' : 'to'}</span>  ${this.for.finishValue} ${currentLang == 'pt' ? 'passo' : 'pass'} ${incType}${this.for.incrementValue} {</p>`;
-    this.commandsPlainText += `<p>${this.runCommands(this.for.components)}</p>`;
-    this.commandsPlainText += `<p>}</p>`;
+    const until = this.formatUntilKeyword(currentLang);
+    const step = this.formatStep(this.for.incrementType, this.for.incrementValue);
+    this.commandsPlainText = `<span>${currentLang == 'pt' ? 'repita_para' : 'repeat_for'} ${this.for.variable} ${currentLang == 'pt' ? 'de' : 'from'} ${this.for.startValue} ${until} ${this.for.finishValue} ${currentLang == 'pt' ? 'passo' : 'pass'} ${step} {</span><br/>`;
+    this.commandsPlainText += `<span>${this.runCommands(this.for.components)}</span>`;
+    this.commandsPlainText += `<span>}</span>`;
   }
 
   runCommands(components: any) {
@@ -165,7 +178,9 @@ export class ForComponent implements OnInit {
       }
 
       if (c.type == TypesEnum.FOR_CODITIONAL) {
-        programComands += `&emsp; ${currentLang == 'pt' ? 'repita_para' : 'repeat_for'} ${c.value.variable} ${currentLang == 'pt' ? 'de' : 'from'} ${c.value.startValue} ${currentLang == 'pt' ? 'ate' : 'to'} ${c.value.finishValue} ${currentLang == 'pt' ? 'passo' : 'pass'} ${c.value.incrementType}${c.value.incrementValue} { <br/>`;
+        const until = this.formatUntilKeyword(currentLang);
+        const step = this.formatStep(c.value.incrementType, c.value.incrementValue);
+        programComands += `&emsp; ${currentLang == 'pt' ? 'repita_para' : 'repeat_for'} ${c.value.variable} ${currentLang == 'pt' ? 'de' : 'from'} ${c.value.startValue} ${until} ${c.value.finishValue} ${currentLang == 'pt' ? 'passo' : 'pass'} ${step} { <br/>`;
         programComands += `&emsp; ${this.runCommands(c.value.components)}`;
         programComands += `&emsp; } <br/>`;
       }

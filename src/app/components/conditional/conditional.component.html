@@ -65,17 +65,17 @@
                                 <option [ngValue]="'%'" [title]="'GENERAL.MODULO' | translate" [attr.aria-label]="'GENERAL.MODULO' | translate">%</option>
                             </optgroup>
                             <optgroup [label]="'GENERAL.LOGIC' | translate">
-                                <option [ngValue]="'E'">E</option>
-                                <option [ngValue]="'OU'">OU</option>
-                                <option [ngValue]="'nao'">nao</option>
+                                <option [ngValue]="'E'" [title]="'GENERAL.AND' | translate" [attr.aria-label]="'GENERAL.AND' | translate">E</option>
+                                <option [ngValue]="'OU'" [title]="'GENERAL.OR' | translate" [attr.aria-label]="'GENERAL.OR' | translate">OU</option>
+                                <option [ngValue]="'nao'" [title]="'GENERAL.NO' | translate" [attr.aria-label]="'GENERAL.NO' | translate">nao</option>
                             </optgroup>
                             <optgroup [label]="'GENERAL.RELATIONAL' | translate">
-                                <option [ngValue]="'>'">&gt;</option>
-                                <option [ngValue]="'<'">&lt;</option>
-                                <option [ngValue]="'=='">==</option>
-                                <option [ngValue]="'!='">!=</option>
-                                <option [ngValue]="'>='">&gt;=</option>
-                                <option [ngValue]="'<='">&lt;=</option>
+                                <option [ngValue]="'>'" [title]="'ACCESSIBLE_MATH.GREATER' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.GREATER' | translate">&gt;</option>
+                                <option [ngValue]="'<'" [title]="'ACCESSIBLE_MATH.LESS' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.LESS' | translate">&lt;</option>
+                                <option [ngValue]="'=='" [title]="'ACCESSIBLE_MATH.EQUAL' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.EQUAL' | translate">==</option>
+                                <option [ngValue]="'!='" [title]="'ACCESSIBLE_MATH.NOT_EQUAL' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.NOT_EQUAL' | translate">!=</option>
+                                <option [ngValue]="'>='" [title]="'ACCESSIBLE_MATH.GREATER_EQUAL' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.GREATER_EQUAL' | translate">&gt;=</option>
+                                <option [ngValue]="'<='" [title]="'ACCESSIBLE_MATH.LESS_EQUAL' | translate" [attr.aria-label]="'ACCESSIBLE_MATH.LESS_EQUAL' | translate">&lt;=</option>
                             </optgroup>
                         </select>
                     </div>

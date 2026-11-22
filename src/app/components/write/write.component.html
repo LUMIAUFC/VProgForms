@@ -10,20 +10,22 @@
     <div *ngIf="isHidden" class="col-12 col-lg-9 d-flex flex-wrap align-items-center gap-2 py-1">
         <span for="receive" class="me-1" tabindex="0" [title]="'GENERAL.RECEIVE' | translate">{{ "GENERAL.WRITE" | translate }}</span>
 
-        <select [id]="'write-type-' + idElement" [(ngModel)]="writer.type" (change)="changeType()" class="form-select write-select">
+        <select [id]="'write-type-' + idElement" [(ngModel)]="writer.type" (change)="changeType()" class="form-select write-select"
+            [title]="'GENERAL.SELECT_DATA_TYPE' | translate" [attr.aria-label]="'GENERAL.SELECT_DATA_TYPE' | translate">
             <option [ngValue]="''" disabled *ngIf="writer.type ==''">{{ "GENERAL.SELECT" | translate }}</option>
             <option [ngValue]="'VARIABLE'">{{ "GENERAL.VARIABLE" | translate }}</option>
             <option [ngValue]="'TEXT'">{{ "GENERAL.TEXT" | translate }}</option>
         </select>
 
-        <select [(ngModel)]="writer.value" (change)="setStorage()" *ngIf="writer.type == 'VARIABLE'" class="form-select write-select">
+        <select [(ngModel)]="writer.value" (change)="setStorage()" *ngIf="writer.type == 'VARIABLE'" class="form-select write-select"
+            [title]="'WRITE.SELECT_OPERATION' | translate" [attr.aria-label]="'WRITE.SELECT_OPERATION' | translate">
             <option *ngIf="variables.length && writer.value==''" disabled [ngValue]="''">{{ "WRITE.SELECT_OPERATION" | translate }}</option>
             <option *ngFor="let v of variables" [ngValue]="v.value.name">{{v.value.name}}</option>
             <option *ngIf="!variables.length && writer.value==''" disabled [ngValue]="''">{{ "GENERAL.NOT_VARIABLE" | translate }}</option>
         </select>
 
         <input class="form-control write-input" [(ngModel)]="writer.value" *ngIf="writer.type == 'TEXT'" type="text" (change)="setStorage()"
-            [placeholder]=" 'GENERAL.DIGIT' | translate " />
+            [placeholder]=" 'GENERAL.DIGIT' | translate " [title]="'GENERAL.DIGIT' | translate" [attr.aria-label]="'GENERAL.DIGIT' | translate" />
     </div>
 
     <div class="col-12 col-lg-3 py-1">
